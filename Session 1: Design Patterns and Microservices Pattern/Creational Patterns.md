@@ -45,12 +45,12 @@ Ensures a class has only one instance and provides a global point of access to i
            return internalMap.get(name);
        }
 
-       public Integer registerNumberOf(Integer phoneNumber, String name){
-           return internalMap.putIfAbsent(name, phoneNumber);
+       public void registerNumberOf(Integer phoneNumber, String name){
+           internalMap.putIfAbsent(name, phoneNumber);
        }
    }
    ```
-   
+
 **Implementation Considerations:**
 While the Singleton pattern can be useful, it's important to use it judiciously. Overusing Singletons or using them inappropriately can lead to problems such as:
 
