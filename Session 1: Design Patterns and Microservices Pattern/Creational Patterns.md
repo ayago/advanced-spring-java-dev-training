@@ -24,32 +24,56 @@ Ensures a class has only one instance and provides a global point of access to i
 4. Make the constructor of the class private. The static method of the class will still be able to call the constructor, but not the other objects.
 
 
-
-
    ```java
-   public class InMemoryPhoneDatabase {
-       private static InMemoryPhoneDatabase instance;
+   public class InMemoryLogger {
+       private static InMemoryLogger instance;
 
-       private final Map<String, Integer> internalMap = new HashMap<>();
+       private final List<LogEntry> internalStorage = new ArrayList<>();
 
-       private InMemoryPhoneDatabase() {}
+       private InMemoryLogger() {}
 
-       public static InMemoryPhoneDatabase getInstance() {
+       public static InMemoryLogger getInstance() {
            if (instance == null) {
-               instance = new InMemoryPhoneDatabase();
+               instance = new InMemoryLogger();
            }
            return instance;
        }
 
-       public Integer getPhoneNumberOf(String name){
-           return internalMap.get(name);
+       public List<String> getErrorLogsFrom(LocalDate date){
+           return internalStorage.stream()
+            .filter(entry -> entry.isError())
+            .filter(entry -> entry.happenedOnOrAfter(date))
+            .collect(Collectors.toList());
        }
 
-       public void registerNumberOf(Integer phoneNumber, String name){
-           internalMap.putIfAbsent(name, phoneNumber);
+       public void writeErrorMessage(String message){
+           LogEntry logEntry = new ErrorLogEntry(message);
+           internalStorage.add(logEntry);
        }
    }
    ```
+
+ **Sample Usage**
+
+ ```java
+ class PaymentService {
+
+    private final BankGateway bankGateway;
+
+    public void payForBill(BillDetails billDetails){
+        try {
+            Account from = resolveAccount(billDetails);
+            Account to = resolvePayee(billDetails);
+            Money billAmount = resolveAmount(billDetails);
+
+            bankGateway.performPayment(from, to, billAmount);
+        } catch (Exception e){
+            //usage
+            InMemoryLogger.getInstance().writeErrorMessage(e.getMessage());
+        }
+    }
+ }
+ ```  
 
 **Implementation Considerations:**
 While the Singleton pattern can be useful, it's important to use it judiciously. Overusing Singletons or using them inappropriately can lead to problems such as:
