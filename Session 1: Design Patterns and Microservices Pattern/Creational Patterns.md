@@ -212,3 +212,174 @@ public class SimulatorApp {
 
 - Pros: Provides flexibility in object creation, promotes loose coupling, and follows the Open/Closed Principle.
 - Cons: The code can become more complex with the addition of many subclasses. Each new type of product requires creating a new subclass of the creator.
+
+## Abstract Factory
+
+The Abstract Factory Pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes. It allows for the creation of a group of related objects from a single point of control.
+
+**When to use**
+
+- When a system needs to be independent of the way its products are created, composed, or represented.
+- When you want to enforce constraints about which related objects can be used together.
+- When you have multiple families of products that need to be created together.
+
+**How to Implement**
+
+1. **Define Abstract Products**: Create interfaces or abstract classes for each type of product in the family.
+2. **Create Concrete Products**: Implement concrete classes for each product that belong to different families.
+3. **Define an Abstract Factory**: Create an interface or abstract class with a set of methods to create each type of product.
+4. **Implement Concrete Factories**: Create concrete classes implementing the abstract factory, each responsible for creating objects from a specific product family.
+5. **Use the Abstract Factory**: Client code interacts with the abstract factory to get instances of the product families without knowing the concrete classes.
+
+**Sample Implementation**
+
+Abstract Factory Pattern for Commerce Order System
+
+1. **Product Interfaces:**
+
+    - Order
+    - Invoice
+    
+2. **Concrete Products:**
+
+    - PhysicalOrder
+    - DigitalOrder
+    - PhysicalInvoice
+    - DigitalInvoice
+  
+3. **Abstract Factory:**
+
+    - OrderFactory
+  
+4. **Concrete Factories:**
+
+   - PhysicalOrderFactory
+   - DigitalOrderFactory
+  
+
+```java
+// Product Interfaces
+interface Order {
+    void processOrder();
+}
+
+interface Invoice {
+    void generateInvoice();
+}
+
+// Concrete Products - Physical Order
+class PhysicalOrder implements Order {
+    @Override
+    public void processOrder() {
+        System.out.println("Processing physical order.");
+    }
+}
+
+class PhysicalInvoice implements Invoice {
+    @Override
+    public void generateInvoice() {
+        System.out.println("Generating physical invoice.");
+    }
+}
+
+// Concrete Products - Digital Order
+class DigitalOrder implements Order {
+    @Override
+    public void processOrder() {
+        System.out.println("Processing digital order.");
+    }
+}
+
+class DigitalInvoice implements Invoice {
+    @Override
+    public void generateInvoice() {
+        System.out.println("Generating digital invoice.");
+    }
+}
+
+// Abstract Factory
+interface OrderFactory {
+    Order createOrder();
+    Invoice createInvoice();
+}
+
+// Concrete Factories - Physical Order
+class PhysicalOrderFactory implements OrderFactory {
+    @Override
+    public Order createOrder() {
+        return new PhysicalOrder();
+    }
+
+    @Override
+    public Invoice createInvoice() {
+        return new PhysicalInvoice();
+    }
+}
+
+// Concrete Factories - Digital Order
+class DigitalOrderFactory implements OrderFactory {
+    @Override
+    public Order createOrder() {
+        return new DigitalOrder();
+    }
+
+    @Override
+    public Invoice createInvoice() {
+        return new DigitalInvoice();
+    }
+}
+
+// Client code
+public class CommerceOrderSystem {
+    public static void main(String[] args) {
+        // Create and process physical order
+        OrderFactory physicalOrderFactory = new PhysicalOrderFactory();
+        Order physicalOrder = physicalOrderFactory.createOrder();
+        Invoice physicalInvoice = physicalOrderFactory.createInvoice();
+
+        physicalOrder.processOrder();  // Output: Processing physical order.
+        physicalInvoice.generateInvoice();  // Output: Generating physical invoice.
+
+        // Create and process digital order
+        OrderFactory digitalOrderFactory = new DigitalOrderFactory();
+        Order digitalOrder = digitalOrderFactory.createOrder();
+        Invoice digitalInvoice = digitalOrderFactory.createInvoice();
+
+        digitalOrder.processOrder();  // Output: Processing digital order.
+        digitalInvoice.generateInvoice();  // Output: Generating digital invoice.
+    }
+}
+
+```
+
+**Real-World Examples**
+
+1. Document Creation Software:
+
+    A document creation tool that supports different document types with varying formatting options, such as Markdown and LaTeX.
+
+    * Product Interfaces: Document, Formatter.
+    * Concrete Products: MarkdownDocument, LatexDocument, MarkdownFormatter, LatexFormatter.
+    * Factories: MarkdownFactory, LatexFactory.
+
+2. Database Connectivity:
+
+    A database connection pool that supports multiple types of databases, such as MySQL, PostgreSQL, and SQLite.
+
+    * Product Interfaces: Connection, Statement.
+    * Concrete Products: MySQLConnection, PostgreSQLConnection, SQLiteConnection, MySQLStatement, PostgreSQLStatement, SQLiteStatement.
+    * Factories: MySQLFactory, PostgreSQLFactory, SQLiteFactory.
+
+3. User Authentication Systems: 
+
+    A user authentication system that supports different authentication methods, such as OAuth and SAML.
+
+    * Product Interfaces: Authenticator, Token.
+    * Concrete Products: OAuthAuthenticator, SAMLAuthenticator, OAuthToken, SAMLToken.
+    * Factories: OAuthFactory, SAMLFactory.
+
+**Considerations**
+
+* Pros: Promotes consistency among related objects, isolates client code from concrete classes, and supports the Open/Closed Principle by allowing easy extension with new families of products.
+  
+* Cons: Can increase complexity due to the large number of interfaces and classes. Adding new products to the family may require changes in the factory interface and all its concrete implementations.
