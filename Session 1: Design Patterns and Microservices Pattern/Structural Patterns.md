@@ -390,3 +390,131 @@ public class BridgePatternECommerce {
 * Flexibility: It offers flexibility in selecting or switching between different payment and shipping providers at runtime.
 * Maintenance: Easier maintenance and updates since changes in one aspect (e.g., payment method) don’t require changes in another (e.g., shipping method).
 * Overhead: While powerful, this pattern can introduce additional complexity, which might not be necessary if only a small number of fixed payment and shipping options are supported.
+
+## Composite
+
+Compose objects into tree structures to represent part-whole hierarchies.
+Composite lets clients treat individual objects and compositions of objects
+uniformly.
+
+**When to Use**
+
+* When you need to represent a tree structure of objects.
+* When clients need to treat leaf nodes and composite nodes uniformly.
+* When you want to avoid conditional code when dealing with a hierarchy of objects.
+
+**How to Implement**
+
+1. Component Interface: Define a common interface for both leaf and composite objects.
+2. Leaf Class: Implements the component interface and represents individual objects.
+3. Composite Class: Implements the component interface and contains child components, which can be either leaves or other composites.
+4. Client: Interacts with the component interface and can work with both individual objects and composites uniformly.
+
+**Sample Implementation**
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Component
+interface Item {
+    double getPrice();
+}
+
+// Leaf - Product
+class Product implements Item {
+    private String name;
+    private double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return name + " ($" + price + ")";
+    }
+}
+
+// Composite - Box
+class Box implements Item {
+    private List<Item> items = new ArrayList<>();
+    private String description;
+
+    public Box(String description) {
+        this.description = description;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    @Override
+    public double getPrice() {
+        return items.stream().mapToDouble(Item::getPrice).sum();
+    }
+
+    @Override
+    public String toString() {
+        return description + " containing " + items.size() + " items (Total: $" + getPrice() + ")";
+    }
+}
+
+// Client
+public class ECommerceCompositeDemo {
+    public static void main(String[] args) {
+        // Creating individual products
+        Item laptop = new Product("Laptop", 1000);
+        Item phone = new Product("Phone", 500);
+        Item charger = new Product("Charger", 50);
+        Item headphones = new Product("Headphones", 100);
+
+        // Creating a small box that contains products
+        Box smallBox = new Box("Small Box");
+        smallBox.addItem(phone);
+        smallBox.addItem(charger);
+
+        // Creating a nested box within the small box
+        Box nestedBox = new Box("Nested Box");
+        nestedBox.addItem(new Product("USB Cable", 10));
+        nestedBox.addItem(new Product("Adapter", 20));
+        smallBox.addItem(nestedBox);  // Add nested box to small box
+
+        // Creating a large box that contains another box and a product
+        Box largeBox = new Box("Large Box");
+        largeBox.addItem(laptop);
+        largeBox.addItem(smallBox);
+
+        // Creating an order that contains products and boxes
+        Box order = new Box("Order Box");
+        order.addItem(largeBox);
+        order.addItem(headphones);
+
+        // Calculating the total price of the order
+        System.out.println("Order Details:");
+        System.out.println(order.toString());
+        System.out.println("Total Order Price: $" + order.getPrice());
+    }
+}
+
+```
+   
+**Real World Examples**
+
+* File System Hierarchy: Folders can contain files or other folders, and both can be treated uniformly when performing operations like listing or searching.
+* Graphics Editors: Objects like circles, lines, and rectangles can be grouped into larger objects, and the editor can treat them all as a single shape.
+  
+**Considerations**
+
+* Overhead: The Composite pattern can introduce complexity, especially when managing a large number of components.
+* Uniformity vs. Flexibility: While it provides a uniform interface, you might lose some flexibility since all components have to support the operations in the interface.
