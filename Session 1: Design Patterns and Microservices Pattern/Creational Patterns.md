@@ -614,9 +614,141 @@ class SampleImplementation {
 }
 ```
 
+**Real World Scenarios**
+
+Some examples of using the Builder pattern in knowledge engineering include different generators. Parsers in various compilers are also designed using the Builder pattern.
+
 **Considerations**
 
 * **Single Responsibility**: The Director is focused purely on orchestrating the construction process, leaving the actual creation of parts to the builders.
 * **Reusability**: The same Director can be reused with different builders to create various products, reducing code duplication and enhancing flexibility.
 * **Complexity**: While providing powerful abstraction, the pattern may introduce complexity, especially if there are many products or varied construction processes.
 * **Separation of Concerns**: The director and builders are independent, ensuring that changes to the construction process or the product type do not affect each other.
+
+## Prototype
+
+Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype.
+
+**When to use**
+
+Use the Prototype pattern when a system should be independent of how its products are created, composed, and represented; and
+
+* when the classes to instantiate are specified at run-time for example, by dynamic loading; or
+* to avoid building a class hierarchy of factories that parallels the class hierarchy of products; or
+* when instances of a class can have one of only a few different combinations of state. It may be more convenient to install a corresponding number of prototypes and clone them rather than instantiating the class manually, each time with the appropriate state.
+
+**How to Implement**
+
+1. Create an interface or abstract class with a clone() or similar method. (The prototype interface)
+2. Implement the clone() method in the concrete classes to return a copy of the object.
+3. Use the clone() method to create new objects based on existing instances. (The client/system)
+
+
+**Sample Implementation**
+
+```java
+class DressBrowsingConfiguration {
+    private final int size;
+    private final String color;
+    
+    DressBrowsingConfiguration(int size, String color){
+        this.size = size;
+        this.color = color;
+    }
+    
+    public int getSize(){
+        return size;
+    }
+    
+    public String getColor(){
+        return color;
+    }
+    
+    @Override
+    public String toString(){
+        return "DressBrowsingConfiguration{" +
+            "size=" + size +
+            ", color='" + color + '\'' +
+            '}';
+    }
+}
+
+//Prototype interface
+interface EfficientDressCatalog {
+    EfficientDressCatalog customizeWith(DressBrowsingConfiguration customization);
+}
+
+//Concrete prototype
+class AICustomizedDress implements EfficientDressCatalog {
+    
+    private final byte[] generatedDressImage;
+    
+    AICustomizedDress(byte[] generatedDressImage){
+        this.generatedDressImage = generatedDressImage;
+    }
+    
+    @Override
+    public EfficientDressCatalog customizeWith(DressBrowsingConfiguration customization){
+        byte[] customizedImage = customizeImageWith(customization);
+        return new AICustomizedDress(customizedImage);
+    }
+    
+    private byte[] customizeImageWith(DressBrowsingConfiguration customization){
+        System.out.println("Customizing with "+customization.toString());
+        return this.generatedDressImage;
+    }
+    
+    @Override
+    public String toString(){
+        return "AICustomizedDress{" +
+            "generatedDressImage=" + Arrays.toString(generatedDressImage) +
+            '}';
+    }
+}
+class UserSession {
+
+}
+
+class AIDressSuggestionGateway {
+    List<EfficientDressCatalog> getDressSuggestions(UserSession userSession){
+        System.out.println("Expensive AI dress suggestion generation call using user session "+userSession);
+        return Collections.singletonList(
+            new AICustomizedDress(new byte[]{'E','x','p','e','n','s','i','v','e'})
+        );
+    }
+}
+
+class SampleDressCatalogHandler{
+
+    //sample client/system using the prototype
+    public static void main(String[] args){
+        AIDressSuggestionGateway aiDressSuggestionGateway = new AIDressSuggestionGateway();
+        
+        System.out.println("Simulating first request...");
+        List<EfficientDressCatalog> dressSuggestions = aiDressSuggestionGateway.getDressSuggestions(new UserSession());
+        DressBrowsingConfiguration userSettingsOne = new DressBrowsingConfiguration(1, "GREEN");
+        List<EfficientDressCatalog> customizedSuggestions = dressSuggestions.stream()
+            .map(dressSuggestion -> dressSuggestion.customizeWith(userSettingsOne))
+            .collect(Collectors.toList());
+        System.out.println(customizedSuggestions);
+    
+        System.out.println("Simulating second request...");
+        DressBrowsingConfiguration userSettingsTwo = new DressBrowsingConfiguration(3, "BLUE");
+        List<EfficientDressCatalog> customizedSuggestionsTwo = dressSuggestions.stream()
+            .map(dressSuggestion -> dressSuggestion.customizeWith(userSettingsTwo))
+            .collect(Collectors.toList());
+        System.out.println(customizedSuggestionsTwo);
+    }
+}
+```
+
+**Real World Examples**
+
+* Document Templates: A word processor may have templates for letters, memos, etc., that are used as prototypes to create new documents.
+* Game Development: Characters or objects in a game can be cloned from existing prototypes to save time on initializing attributes.
+
+**Considerations**
+
+* **Shallow vs. Deep Copy**: Shallow copying duplicates the object but not its nested objects, while deep copying duplicates everything. Decide which is more appropriate based on your use case.
+* **Prototype Registry**: You may need to maintain a registry of available prototypes to clone from, especially in large systems.
+* **Copy Cost**: Although cloning can be faster than initializing from scratch, the clone() method may have performance implications if deep copies are required.
