@@ -518,3 +518,101 @@ public class ECommerceCompositeDemo {
 
 * Overhead: The Composite pattern can introduce complexity, especially when managing a large number of components.
 * Uniformity vs. Flexibility: While it provides a uniform interface, you might lose some flexibility since all components have to support the operations in the interface.
+
+## Decorator
+
+The Decorator pattern dynamically adds behavior or responsibilities to an object without altering its structure. It allows for flexible and scalable modifications by wrapping the original object in decorator classes.
+
+**When to Use**
+
+* When you need to add responsibilities to individual objects dynamically and transparently without affecting other objects.
+* When extending behavior through inheritance is impractical, either because of too many possible extensions or because it might introduce unintended changes to all subclasses.
+* When the extension of functionality through composition is preferred over inheritance.
+  
+**How to Implement**
+
+1. Component Interface: Define an interface that both the concrete component and decorators will implement.
+2. Concrete Component: Implement the component interface with a base object that can have responsibilities added to it.
+3. Decorator Base Class: Create an abstract decorator class that implements the component interface and holds a reference to a component object.
+4. Concrete Decorators: Implement concrete decorators that extend the decorator base class. These decorators can add or override behavior before/after delegating calls to the wrapped component.
+
+**Sample Implementation**
+
+Imagine a user experience team studying how inventory system admins use the current system:
+
+```java
+// Component Interface
+public interface User {
+    void performOperation();
+}
+
+// Concrete Component
+public class AdminUser implements User {
+    @Override
+    public void performOperation() {
+        authenticate();
+        System.out.println("Performing administrative operation.");
+    }
+
+    private void authenticate() {
+        System.out.println("User authenticated successfully.");
+    }
+}
+
+// Decorator Base Class
+public abstract class UserDecorator implements User {
+    protected User decoratedUser;
+
+    public UserDecorator(User user) {
+        this.decoratedUser = user;
+    }
+
+    @Override
+    public void performOperation() {
+        decoratedUser.performOperation();
+    }
+}
+
+// Concrete Decorator: Logging for Beta Users
+public class BetaUserDecorator extends UserDecorator {
+
+    public BetaUserDecorator(User user) {
+        super(user);
+    }
+
+    @Override
+    public void performOperation() {
+        super.performOperation();
+        logOperation();
+    }
+
+    private void logOperation() {
+        System.out.println("Operation logged for Beta User.");
+    }
+}
+
+// Usage
+public class InventorySystem {
+    public static void main(String[] args) {
+        // Regular Admin User
+        User adminUser = new AdminUser();
+        adminUser.performOperation();
+        System.out.println();
+
+        // Beta Admin User with logging
+        User betaAdminUser = new BetaUserDecorator(new AdminUser());
+        betaAdminUser.performOperation();
+    }
+}
+
+```
+
+**Real World Example**
+
+* Java I/O Streams: The java.io package uses the Decorator pattern extensively. For instance, BufferedInputStream and DataInputStream are decorators that add additional behavior to an InputStream.
+
+**Considerations**
+
+* Overuse: Excessive use of decorators can make the system overly complex, with many small classes, leading to difficulty in understanding and maintaining the code.
+* Identity Issues: Since decorators can change an object's interface, it can be difficult to determine the actual type of the wrapped object.
+* Performance Impact: Each decorator adds a layer of abstraction, which might introduce some performance overhead.
