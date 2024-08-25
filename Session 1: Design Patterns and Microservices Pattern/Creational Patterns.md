@@ -752,3 +752,20 @@ class SampleDressCatalogHandler{
 * **Shallow vs. Deep Copy**: Shallow copying duplicates the object but not its nested objects, while deep copying duplicates everything. Decide which is more appropriate based on your use case.
 * **Prototype Registry**: You may need to maintain a registry of available prototypes to clone from, especially in large systems.
 * **Copy Cost**: Although cloning can be faster than initializing from scratch, the clone() method may have performance implications if deep copies are required.
+
+## Discussions on Creational Pattern
+
+There are two common ways to parameterize a system by the classes of objects it
+creates. 
+
+1. Via Inheritance (See Factory Method). In this case the system has an interface and requires sub class to specify the object or product to b created and worked on. The main drawback of this approach isthat it can require creating a new subclass just to change the class of the product.
+Such changes can cascade. For example,when the product creator is itself created
+by a factory method, then you have to override its creator as well.
+
+2. Via Composition. Define an object that's responsible for knowing the class of the product objects, and make it a parameter of the system. This is a key aspect of the Abstract Factory ,Builder, and Prototype patterns. All three involve creating a
+new "factory object" whoseresponsibility is to create product objects. Abstract
+Factory has thefactory object producing objects of several classes. Builder has
+thefactory object building a complex product incrementally using acorrespondingly
+complex protocol. Prototype has the factory objectbuilding a product by copying
+a prototype object. In this case, the factory object and the prototype are the
+same object, because the prototype is responsible for returning the product.
