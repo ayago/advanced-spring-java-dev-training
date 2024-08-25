@@ -253,3 +253,140 @@ public class AdapterDemo {
 * Object vs. Class Adapter: Object adapters use composition to adapt, while class adapters use inheritance. Object adapters are generally more flexible.
 * Increased Complexity: Adapters can introduce complexity, particularly if multiple adapters are required. Evaluate if simplifying or redesigning the interfaces might be a better approach.
 
+## Bridge
+
+Lets you split a large class or a set of closely related classes into two separate hierarchies—abstraction and implementation—which can be developed independently of each other.
+
+**When to Use**
+
+* When you want to avoid a permanent binding between an abstraction and its implementation.
+* When both the abstraction and its implementation should be extensible by subclassing.
+* When changes in the implementation of an abstraction should have no impact on clients.
+* When you want to hide implementation details from clients.
+  
+**How to Implement**
+
+1. Identify the Abstraction and Implementor: Separate the class's abstract part from its implementation.
+2. Create the Abstraction Class: Define an interface or abstract class that holds a reference to an Implementor.
+3. Create the Implementor Interface: Define the interface for the implementation classes.
+4. Create Concrete Implementations: Create concrete classes that implement the Implementor interface.
+5. Implement the Refined Abstraction: Create concrete subclasses of the Abstraction that use different implementations.
+
+**Sample Implementation**
+
+```java
+// Implementor - PaymentMethod
+interface PaymentMethod {
+    void processPayment(double amount);
+}
+
+// Concrete Implementors - Payment Methods
+class CreditCardPayment implements PaymentMethod {
+    public void processPayment(double amount) {
+        System.out.println("Processing credit card payment of $" + amount);
+    }
+}
+
+class PayPalPayment implements PaymentMethod {
+    public void processPayment(double amount) {
+        System.out.println("Processing PayPal payment of $" + amount);
+    }
+}
+
+// Implementor - ShippingOption
+interface ShippingOption {
+    void ship(String item);
+}
+
+// Concrete Implementors - Shipping Options
+class StandardShipping implements ShippingOption {
+    public void ship(String item) {
+        System.out.println("Shipping " + item + " via Standard Shipping");
+    }
+}
+
+class ExpressShipping implements ShippingOption {
+    public void ship(String item) {
+        System.out.println("Shipping " + item + " via Express Shipping");
+    }
+}
+
+// Abstraction - CheckoutProcess
+abstract class CheckoutProcess {
+    protected PaymentMethod paymentMethod;
+    protected ShippingOption shippingOption;
+
+    protected CheckoutProcess(PaymentMethod paymentMethod, ShippingOption shippingOption) {
+        this.paymentMethod = paymentMethod;
+        this.shippingOption = shippingOption;
+    }
+
+    public abstract void checkout(String item, double amount);
+}
+
+// Refined Abstraction - ECommerceCheckout
+class ECommerceCheckout extends CheckoutProcess {
+    public ECommerceCheckout(PaymentMethod paymentMethod, ShippingOption shippingOption) {
+        super(paymentMethod, shippingOption);
+    }
+
+    public void checkout(String item, double amount) {
+        paymentMethod.processPayment(amount);
+        shippingOption.ship(item);
+    }
+}
+
+// Refined Abstraction - RemoteCheckout
+class UserDetails {}
+
+class RemoteCheckout extends CheckoutProcess {
+
+    private final UserDetails userDetails;
+
+    public RemoteCheckout(UserDetails userDetails, PaymentMethod paymentMethod, ShippingOption shippingOption) {
+        super(paymentMethod, shippingOption);
+        this.userDetails = userDetails;
+    }
+
+    public void checkout(String item, double amount) {
+        validateInvitation();
+        paymentMethod.processPayment(amount);
+        shippingOption.ship(item);
+    }
+
+    private void validateInvitation(){
+        System.out.println("Validation email invitation to user with details "+this.userDetails);
+    }
+}
+
+// Client Code
+public class BridgePatternECommerce {
+    public static void main(String[] args) {
+        // Choose payment method and shipping option dynamically
+        PaymentMethod paymentMethod = new CreditCardPayment();
+        ShippingOption shippingOption = new ExpressShipping();
+
+        // Process ecommerce checkout
+        CheckoutProcess checkout = new ECommerceCheckout(paymentMethod, shippingOption);
+        checkout.checkout("Laptop", 1200.00);
+
+        // Process remote checkout - Simulate the other refined abstraction
+        UserDetails user = new UserDetails();
+        CheckoutProcess remoteProcess = new RemoteCheckout(user, paymentMethod, shippingOption);
+        remoteProcess.checkout("Laptop", 1200.00);
+    }
+}
+
+```
+
+**Real World Examples**
+
+* Graphic Libraries: A graphical application where you might want to separate the logic of the graphical shapes (abstractions) from the rendering engines (implementations) to support multiple rendering systems (e.g., OpenGL, DirectX).
+* Device Driver Software: An operating system might use the Bridge pattern to separate the generic device operations from specific hardware implementations, allowing the OS to support multiple types of devices without changing the device interface.
+
+**Considerations**
+
+* Scalability: This pattern makes it easy to scale the eCommerce system by adding new payment methods and shipping options without altering the checkout process logic.
+* Flexibility: It offers flexibility in selecting or switching between different payment and shipping providers at runtime.
+* Maintenance: Easier maintenance and updates since changes in one aspect (e.g., payment method) don’t require changes in another (e.g., shipping method).
+* Overhead: While powerful, this pattern can introduce additional complexity, which might not be necessary if only a small number of fixed payment and shipping options are supported.
