@@ -697,3 +697,118 @@ public class ECommerceSystem {
 * Flexibility vs. Simplification: While the Facade pattern simplifies the interface, it can also reduce the flexibility of interacting directly with the subsystem classes.
 * Maintenance: Changes in the subsystem may require changes in the Facade, increasing the maintenance burden.
 * Performance: The Facade adds an additional layer, which might impact performance in highly optimized systems.
+
+## Flyweight
+
+The Flyweight pattern is used to minimize memory usage by sharing as much data as possible with similar objects. It is particularly useful when a large number of similar objects are needed.
+
+**When to Use**
+
+* When an application needs to create a large number of similar objects.
+* When memory overhead is a concern, and the objects can share common data, distinguishing between intrinsic (shared) and extrinsic (unique) states.
+* When the cost of creating and maintaining individual instances becomes prohibitive.
+  
+**How to Implement**
+
+1. Identify shared state: Extract the common, intrinsic state from the objects and store it in shared Flyweight objects.
+2. Separate extrinsic state: The unique, extrinsic state of each object instance is passed to methods that perform operations on the Flyweight.
+3. Factory for Flyweights: Use a factory to manage the creation and reuse of Flyweight objects.
+4. Client interaction: The client should work with Flyweight objects through the factory and provide extrinsic data when invoking methods on the Flyweight.
+
+**Sample Implementation**
+
+In a delivery real-time monitoring UI, many similar graphic components such as icons for delivery trucks, houses, trees, traffic lights, and roads are needed. These graphic components are expensive to create and render repeatedly.
+
+```java
+import java.awt.Image;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
+// Flyweight interface
+interface Graphic {
+    void draw(int x, int y); // The extrinsic state (coordinates)
+}
+
+// Concrete Flyweight
+class TruckIcon implements Graphic {
+    private final Image truckImage; // Intrinsic state
+
+    public TruckIcon() {
+        // Simulate loading a heavy truck image
+        this.truckImage = loadImage("truck.png");
+    }
+
+    private Image loadImage(String filename) {
+        // Simulate loading an image file (in reality, use ImageIO or similar)
+        System.out.println("Loading image: " + filename);
+        return null; // Return a mock Image object for this example
+    }
+
+    @Override
+    public void draw(int x, int y) {
+        // Use the truck image and draw at coordinates (x, y)
+        render(truckImage, x, y);
+    }
+
+    private void render(Image image, int x, int y) {
+        // Simulate rendering the image on a UI at the given coordinates
+        System.out.println("Rendering truck at (" + x + ", " + y + ")");
+    }
+}
+
+// Flyweight Factory
+class GraphicFactory {
+    private static final Map<String, Graphic> graphics = new HashMap<>();
+
+    public static Graphic getGraphic(String type) {
+        // Use computeIfAbsent to lazily load and store the graphic object
+        return graphics.computeIfAbsent(type, t -> {
+            switch (t) {
+                case "truck":
+                    return new TruckIcon();
+                // Cases for other graphic types like "house", "tree", etc.
+                default:
+                    throw new IllegalArgumentException("Unknown graphic type: " + t);
+            }
+        });
+    }
+}
+
+// Client code
+class MonitoringUI {
+    public void drawScene(String graphicType, Stream<int[]> coordinates) {
+        Graphic graphic = GraphicFactory.getGraphic(graphicType);
+        coordinates.forEach(coord -> graphic.draw(coord[0], coord[1]));
+    }
+}
+
+// Main method to run the example
+public class FlyweightExample {
+    public static void main(String[] args) {
+        MonitoringUI ui = new MonitoringUI();
+        
+        // Stream of coordinates where trucks should be rendered
+        Stream<int[]> truckCoordinates = Stream.of(
+            new int[]{50, 100},
+            new int[]{150, 200},
+            new int[]{250, 300}
+        );
+        
+        // Draw trucks at the specified coordinates
+        ui.drawScene("truck", truckCoordinates);
+    }
+}
+
+```
+
+**Real World Examples**
+
+* Text editors: Characters are shared between documents to reduce memory footprint.
+* Video games: Shared textures and sprites for objects like trees, rocks, and enemies.
+
+**Considerations**
+
+* Complexity: The Flyweight pattern can add complexity due to the management of shared and unique states.
+* Performance: While memory usage is reduced, the performance may be impacted by the need to pass extrinsic data for each operation.
+* Suitability: Not all scenarios benefit from the Flyweight pattern, especially when objects do not share much common data.
