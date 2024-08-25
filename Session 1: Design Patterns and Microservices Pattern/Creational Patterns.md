@@ -383,3 +383,240 @@ public class CommerceOrderSystem {
 * Pros: Promotes consistency among related objects, isolates client code from concrete classes, and supports the Open/Closed Principle by allowing easy extension with new families of products.
   
 * Cons: Can increase complexity due to the large number of interfaces and classes. Adding new products to the family may require changes in the factory interface and all its concrete implementations.
+
+## Builder
+
+Separate the construction of a complex object from its representation so that
+the same construction process can create different representations.
+
+**When to use**
+
+* When constructing complex objects that require multiple steps.
+* When you need to create different representations of an object using the same construction process.
+* When the construction process needs to be independent of the parts that make up the product.
+
+**How to Implement**
+
+1. Create a Builder interface that defines methods to build different parts of the product.
+2. Implement concrete Builder classes for constructing specific types of products.
+3. Create a Director class that manages the construction process using the Builder interface. The Director ensures that the steps are executed in a specific sequence.
+4. The Builder implementation is responsible for assembling the product and providing access to it (e.g., through a `getResult()` method).
+
+**Sample Implementation**
+
+```java
+//Product
+class ItemPamphlet {
+    private final String title;
+    private final String description;
+    
+    public ItemPamphlet(String title, String description){
+        this.title = title;
+        this.description = description;
+    }
+    
+    @Override
+    public String toString(){
+        return "ItemPamphlet{" +
+            "title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            '}';
+    }
+}
+
+//Another product
+class ItemWebRender {
+    private final String css;
+    private final String html;
+    private final String embeddedScript;
+    
+    public ItemWebRender(String css, String html, String embeddedScript){
+        this.css = css;
+        this.html = html;
+        this.embeddedScript = embeddedScript;
+    }
+    
+    @Override
+    public String toString(){
+        return "ItemWebRender{" +
+            "css='" + css + '\'' +
+            ", html='" + html + '\'' +
+            ", embeddedScript='" + embeddedScript + '\'' +
+            '}';
+    }
+}
+
+//Builder Interface 
+interface ItemPromotionBuilder<E> {
+    void setName(String name);
+    void setItemCode(String code);
+    void setItemImagePath(String imageAssetPath);
+    void setItemDescription(String description);
+    E assemble();
+}
+
+//Builder implementation
+class ItemPamphletPromotionBuilder implements ItemPromotionBuilder<ItemPamphlet> {
+    
+    private String name;
+    private String code;
+    private String imageAssetPath;
+    private String description;
+    
+    
+    @Override
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    @Override
+    public void setItemCode(String code){
+        this.code = code;
+    }
+    
+    @Override
+    public void setItemImagePath(String imageAssetPath){
+        this.imageAssetPath = imageAssetPath;
+    }
+    
+    @Override
+    public void setItemDescription(String description){
+        this.description = description;
+    }
+    
+    @Override
+    public ItemPamphlet assemble(){
+        String title = buildTitle();
+        String description = buildDescription();
+        return new ItemPamphlet(title, description);
+    }
+    
+    private String buildDescription(){
+        return imageAssetPath + '\n' + description;
+    }
+    
+    private String buildTitle(){
+        return name + " (" + code + ")";
+    }
+}
+
+//Builder implementation
+class ItemWebRenderPromotionBuilder implements ItemPromotionBuilder<ItemWebRender> {
+    
+    private String name;
+    private String code;
+    private String imageAssetPath;
+    private String description;
+    
+    
+    @Override
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    @Override
+    public void setItemCode(String code){
+        this.code = code;
+    }
+    
+    @Override
+    public void setItemImagePath(String imageAssetPath){
+        this.imageAssetPath = imageAssetPath;
+    }
+    
+    @Override
+    public void setItemDescription(String description){
+        this.description = description;
+    }
+    
+    @Override
+    public ItemWebRender assemble(){
+        String html = buildHTML();
+        return new ItemWebRender("margin: 10em 10px", html, "javascript: void(0)");
+    }
+    
+    private String buildHTML(){
+        return new StringBuilder("<h3><strong>" + code + "</strong><br/>" + name + "</h3>")
+            .append("<p>").append("<img src='")
+            .append(imageAssetPath).append("'")
+            .append(description)
+            .append("</p>")
+            .toString();
+    }
+}
+
+class Item {
+    
+    private final String name;
+    private final String code;
+    private final String imageAssetPath;
+    private final String description;
+    
+    public Item(String name, String code, String imageAssetPath, String description){
+        this.name = name;
+        this.code = code;
+        this.imageAssetPath = imageAssetPath;
+        this.description = description;
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public String getCode(){
+        return code;
+    }
+    
+    public String getImageAssetPath(){
+        return imageAssetPath;
+    }
+    
+    public String getDescription(){
+        return description;
+    }
+}
+
+//Director
+class ItemPromotionManager {
+    
+    private final Item item;
+    
+    public ItemPromotionManager(Item item){
+        this.item = item;
+    }
+    
+    <E> E prepareMaterial(ItemPromotionBuilder<E> builder){
+        builder.setName(item.getName());
+        builder.setItemCode(item.getCode());
+        builder.setItemImagePath(item.getImageAssetPath());
+        builder.setItemDescription(item.getDescription());
+        return builder.assemble();
+    }
+}
+
+class SampleImplementation {
+    public static void main(String[] args){
+        Item sampleItem = new Item(
+            "Six piece pandesal",
+            "BR0001",
+            "/pastries/pandesal/BR0001",
+            "Six toasted pandesal packed together"
+        );
+        
+        ItemPromotionManager itemPromotionManager = new ItemPromotionManager(sampleItem);
+        
+        ItemPamphlet sampleItemPamphlet = itemPromotionManager.prepareMaterial(new ItemPamphletPromotionBuilder());
+        System.out.println(sampleItemPamphlet);
+        
+        ItemWebRender sampleItemWebRender = itemPromotionManager.prepareMaterial(new ItemWebRenderPromotionBuilder());
+        System.out.println(sampleItemWebRender);
+    }
+}
+```
+
+**Considerations**
+
+* **Single Responsibility**: The Director is focused purely on orchestrating the construction process, leaving the actual creation of parts to the builders.
+* **Reusability**: The same Director can be reused with different builders to create various products, reducing code duplication and enhancing flexibility.
+* **Complexity**: While providing powerful abstraction, the pattern may introduce complexity, especially if there are many products or varied construction processes.
+* **Separation of Concerns**: The director and builders are independent, ensuring that changes to the construction process or the product type do not affect each other.
