@@ -616,3 +616,84 @@ public class InventorySystem {
 * Overuse: Excessive use of decorators can make the system overly complex, with many small classes, leading to difficulty in understanding and maintaining the code.
 * Identity Issues: Since decorators can change an object's interface, it can be difficult to determine the actual type of the wrapped object.
 * Performance Impact: Each decorator adds a layer of abstraction, which might introduce some performance overhead.
+
+## Facade
+
+The Facade pattern provides a simplified interface to a complex subsystem. It hides the complexities of the system and provides an easy-to-use interface for the client.
+
+**When to Use**
+* When you need to simplify interaction with a complex system.
+* When you want to reduce dependencies between clients and the subsystem.
+* When you want to provide a single entry point to a system or subsystem.
+
+**How to Implement**
+
+1. Identify the complex subsystem or set of operations that need to be simplified.
+2. Design a Facade class that exposes a simple interface to the client.
+3. Delegate requests from the Facade to appropriate subsystem classes.
+4. The client interacts only with the Facade, without knowing the underlying complexities.
+
+**Sample Implementation**
+
+Scenario: A complex ECommerce settlement process involves multiple API calls to payment gateways, inventory systems, and shipping services. The Facade simplifies this process for the client.
+
+```java
+// Subsystem classes
+class PaymentGateway {
+    public void processPayment(String account, double amount) {
+        System.out.println("Processing payment for account: " + account);
+    }
+}
+
+class InventorySystem {
+    public void updateInventory(String itemId, int quantity) {
+        System.out.println("Updating inventory for item: " + itemId);
+    }
+}
+
+class ShippingService {
+    public void arrangeShipping(String address) {
+        System.out.println("Arranging shipping to: " + address);
+    }
+}
+
+// Facade class
+class SettlementFacade {
+    private PaymentGateway paymentGateway;
+    private InventorySystem inventorySystem;
+    private ShippingService shippingService;
+
+    public SettlementFacade() {
+        this.paymentGateway = new PaymentGateway();
+        this.inventorySystem = new InventorySystem();
+        this.shippingService = new ShippingService();
+    }
+
+    public void completeSettlement(String account, double amount, String itemId, int quantity, String address) {
+        paymentGateway.processPayment(account, amount);
+        inventorySystem.updateInventory(itemId, quantity);
+        shippingService.arrangeShipping(address);
+        System.out.println("Settlement process completed.");
+    }
+}
+
+// Client code
+public class ECommerceSystem {
+    public static void main(String[] args) {
+        SettlementFacade settlementFacade = new SettlementFacade();
+        settlementFacade.completeSettlement("12345", 250.75, "item123", 10, "123 Main St, City");
+    }
+}
+
+```
+
+**Real World Examples**
+
+* Java's java.net.URL class: This class acts as a facade to the underlying networking operations, simplifying the process of connecting to and interacting with a web resource.
+* Database connection pools: A connection pool library often provides a facade that simplifies the management and use of multiple database connections.
+
+**Considerations**
+
+* Flexibility vs. Simplification: While the Facade pattern simplifies the interface, it can also reduce the flexibility of interacting directly with the subsystem classes.
+* Maintenance: Changes in the subsystem may require changes in the Facade, increasing the maintenance burden.
+* Performance: The Facade adds an additional layer, which might impact performance in highly optimized systems.
