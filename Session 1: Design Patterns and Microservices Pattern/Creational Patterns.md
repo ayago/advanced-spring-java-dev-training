@@ -752,6 +752,7 @@ class SampleDressCatalogHandler{
 * **Shallow vs. Deep Copy**: Shallow copying duplicates the object but not its nested objects, while deep copying duplicates everything. Decide which is more appropriate based on your use case.
 * **Prototype Registry**: You may need to maintain a registry of available prototypes to clone from, especially in large systems.
 * **Copy Cost**: Although cloning can be faster than initializing from scratch, the clone() method may have performance implications if deep copies are required.
+* Prototype patterns allows for savings on the cost of creating an object.
 
 ## Discussions on Creational Pattern
 

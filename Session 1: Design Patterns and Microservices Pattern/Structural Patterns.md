@@ -541,32 +541,34 @@ The Decorator pattern dynamically adds behavior or responsibilities to an object
 Imagine a user experience team studying how inventory system admins use the current system:
 
 ```java
-// Component Interface
-public interface User {
+import java.time.LocalDateTime;
+
+//Component Interface
+interface User {
     void performOperation();
 }
 
 // Concrete Component
-public class AdminUser implements User {
+class AdminUser implements User {
     @Override
     public void performOperation() {
         authenticate();
         System.out.println("Performing administrative operation.");
     }
-
+    
     private void authenticate() {
         System.out.println("User authenticated successfully.");
     }
 }
 
 // Decorator Base Class
-public abstract class UserDecorator implements User {
+abstract class UserDecorator implements User {
     protected User decoratedUser;
-
+    
     public UserDecorator(User user) {
         this.decoratedUser = user;
     }
-
+    
     @Override
     public void performOperation() {
         decoratedUser.performOperation();
@@ -574,37 +576,65 @@ public abstract class UserDecorator implements User {
 }
 
 // Concrete Decorator: Logging for Beta Users
-public class BetaUserDecorator extends UserDecorator {
-
-    public BetaUserDecorator(User user) {
+class BetaUserDecorator extends UserDecorator {
+    
+    private final OperationLogger logger;
+    
+    public BetaUserDecorator(User user, OperationLogger logger) {
         super(user);
+        this.logger = logger;
     }
-
+    
     @Override
     public void performOperation() {
+        LogEntry entry = logger.createInfoEntry("Operation logged for Beta User.");
         super.performOperation();
-        logOperation();
+        logger.commit(entry);
     }
+}
 
-    private void logOperation() {
-        System.out.println("Operation logged for Beta User.");
+class LogEntry {
+    private final LocalDateTime start;
+    private final String message;
+    
+    LogEntry(String message){
+        this.message = message;
+        this.start = LocalDateTime.now();
+    }
+    
+    public LocalDateTime getStart(){
+        return this.start;
+    }
+    
+    public String getMessage(){
+        return this.message;
+    }
+}
+
+class OperationLogger {
+    LogEntry createInfoEntry(String message){
+        return new LogEntry(message);
+    }
+    
+    void commit(LogEntry entry){
+        System.out.printf("Start: %s, End: %s - %s", entry.getStart(), LocalDateTime.now(), entry.getMessage());
     }
 }
 
 // Usage
-public class InventorySystem {
+class InventorySystem {
     public static void main(String[] args) {
         // Regular Admin User
         User adminUser = new AdminUser();
         adminUser.performOperation();
         System.out.println();
-
+        
         // Beta Admin User with logging
-        User betaAdminUser = new BetaUserDecorator(new AdminUser());
+        OperationLogger logger = new OperationLogger();
+        User betaAdminUser = new BetaUserDecorator(new AdminUser(), logger);
         betaAdminUser.performOperation();
     }
 }
-
 ```
 
 **Real World Example**
@@ -812,3 +842,146 @@ public class FlyweightExample {
 * Complexity: The Flyweight pattern can add complexity due to the management of shared and unique states.
 * Performance: While memory usage is reduced, the performance may be impacted by the need to pass extrinsic data for each operation.
 * Suitability: Not all scenarios benefit from the Flyweight pattern, especially when objects do not share much common data.
+* Flyweight allows for savings in memory cost by referencing the same intrinsic property that is memory expensive
+
+## Proxy
+
+Provide a surrogate or placeholder for another object to control access to it.
+
+**When to Use**
+
+* When you need to control access to an object.
+* When an object is resource-intensive to create or perform operations, and you want to delay its creation until it’s absolutely necessary.
+
+**How to Implement**
+
+1. Create an Interface: Define an interface that both the RealSubject and Proxy will implement.
+2. Implement the Real Subject: This is the actual object that the proxy represents.
+3. Implement the Proxy: Create a class that implements the interface and controls access to the RealSubject.
+4. Use the Proxy: The client interacts with the Proxy as if it were the Real Subject.
+
+**Sample Implementation**
+
+Scenario: An eCommerce system uses a Feature Control Manager service that determines if specific features are enabled or disabled. Instead of making an HTTP request each time a feature status is needed, a Proxy is used that listens for real-time updates via a socket event listener and caches the feature status in memory.
+
+```java
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.WebSocket;
+import java.net.http.WebSocket.Listener;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+
+// 1. Interface
+public interface FeatureManager {
+    boolean isFeatureEnabled(String featureName);
+}
+
+// 2. Real Subject
+public class FeatureControlManager implements FeatureManager {
+    private final HttpClient httpClient;
+    private final String featureServiceUrl;
+
+    public FeatureControlManager(String featureServiceUrl) {
+        this.httpClient = HttpClient.newHttpClient();
+        this.featureServiceUrl = featureServiceUrl;
+    }
+
+    @Override
+    public boolean isFeatureEnabled(String featureName) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(featureServiceUrl + "/features/" + featureName))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            // Assuming the response body is "true" or "false"
+            return Boolean.parseBoolean(response.body());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return false; // Default to false if an error occurs
+        }
+    }
+}
+
+// 3. Proxy
+public class FeatureControlManagerProxy implements FeatureManager {
+    private final FeatureControlManager featureControlManager;
+    private final Map<String, Boolean> featureCache;
+    private final WebSocket webSocket;
+
+    public FeatureControlManagerProxy(String featureServiceUrl, String socketUrl) {
+        this.featureControlManager = new FeatureControlManager(featureServiceUrl);
+        this.featureCache = new ConcurrentHashMap<>();
+
+        this.webSocket = HttpClient.newHttpClient().newWebSocketBuilder()
+                .buildAsync(URI.create(socketUrl), new FeatureUpdateListener())
+                .join();
+    }
+
+    @Override
+    public boolean isFeatureEnabled(String featureName) {
+        return featureCache.getOrDefault(featureName, featureControlManager.isFeatureEnabled(featureName));
+    }
+
+    // Socket Listener to update feature cache in real-time
+    private class FeatureUpdateListener implements Listener {
+        @Override
+        public void onText(WebSocket webSocket, CharSequence data, boolean last) {
+            // Assuming the data format is "featureName:true" or "featureName:false"
+            String[] parts = data.toString().split(":");
+            if (parts.length == 2) {
+                featureCache.put(parts[0], Boolean.parseBoolean(parts[1]));
+            }
+            webSocket.request(1); // Request more messages
+        }
+        
+        @Override
+        public void onOpen(WebSocket webSocket) {
+            webSocket.request(1); // Request the first message
+        }
+
+        @Override
+        public CompletableFuture<?> onClose(WebSocket webSocket, int statusCode, String reason) {
+            return Listener.super.onClose(webSocket, statusCode, reason);
+        }
+
+        @Override
+        public void onError(WebSocket webSocket, Throwable error) {
+            error.printStackTrace();
+        }
+    }
+}
+
+// 4. Client usage
+public class ECommerceApplication {
+    public static void main(String[] args) {
+        String featureServiceUrl = "http://featureservice.com";
+        String socketUrl = "ws://featureservice.com/socket";
+
+        FeatureManager featureManager = new FeatureControlManagerProxy(featureServiceUrl, socketUrl);
+        
+        System.out.println("Is 'discounts' feature enabled? " + featureManager.isFeatureEnabled("discounts"));
+        System.out.println("Is 'newUI' feature enabled? " + featureManager.isFeatureEnabled("newUI"));
+    }
+}
+
+```
+
+**Real World Examples**
+
+* Virtual Proxy with Caching: In web applications, an image proxy might cache images to reduce the number of requests made to a server.
+* Remote Proxy: In microservices, a proxy might handle communication between services, adding retries, caching, or rate limiting.
+
+**Considerations**
+
+* You can control the service object without clients knowing about it.
+* You can manage the lifecycle of the service object when clients don’t care about it.
+* The proxy works even if the service object isn’t ready or is not available.
+* Open/Closed Principle. You can introduce new proxies without changing the service or clients.
+* Performance: A proxy can introduce overhead, especially if it adds significant logic (e.g., security checks, logging). Consider whether this overhead is acceptable.
+* Complexity: Introducing a proxy can complicate the design. Ensure that the benefits outweigh the added complexity.
+* Security: In cases where the proxy controls access, ensure that it doesn’t become a single point of failure or a security vulnerability.
