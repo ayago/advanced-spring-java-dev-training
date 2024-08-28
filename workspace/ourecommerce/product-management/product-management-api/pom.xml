@@ -3,23 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>com.ourecommerce</groupId>
-        <artifactId>ourecommerce-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.ourecommerce.productmanagement</groupId>
+        <artifactId>product-management</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.ourecommerce.inventorymanagement</groupId>
-    <artifactId>inventory-management</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>inventory-management-api</module>
-        <module>inventory-management-client</module>
-        <module>inventory-management-service</module>
-    </modules>
+
+    <artifactId>product-management-api</artifactId>
 
     <properties>
+        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
