@@ -1,7 +1,6 @@
-package com.ourecommerce.productmanagement;
+package com.ourecommerce.productmanagement.app;
 
-import com.ourecommerce.productmanagement.api.OnboardRequest;
-import com.ourecommerce.productmanagement.service.ProductService;
+import com.ourecommerce.productmanagement.app.service.SampleService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -11,8 +10,8 @@ public class ProductManagementApplication {
     
     public static void main(String[] args) {
         ConfigurableApplicationContext run = SpringApplication.run(ProductManagementApplication.class, args);
-        ProductService productService = run.getBean(ProductService.class);
-        productService.onboardProduct(new OnboardRequest());
+        SampleService sampleService = run.getBean(SampleService.class);
+        sampleService.onboardProduct();
     }
     
 }
