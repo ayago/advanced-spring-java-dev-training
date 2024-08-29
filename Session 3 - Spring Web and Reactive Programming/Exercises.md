@@ -83,5 +83,40 @@ Request-Tracker: UUID (e.g. JHFDJHS267217HH)
 ## Spring Reactive:
 * Exercise 3.3: Create a reactive Order Service using Spring Web to handle order
 placements.
+
+```json
+
+POST /orders
+
+//payload
+[
+    {
+        "productId": "HJDGSHJDGSJDGS322DS",
+        "quantity": 2
+    },
+    {
+        "productId": "AMDGSHJDDDGSJDGS322DS",
+        "quantity": 12
+    }
+]
+```
+
 * Exercise 3.4: Implement reactive streams to process real-time order data using
 Project Reactor.
+
+```json
+
+GET /order-events
+
+//response
+[
+    {
+        "productId": "HJDGSHJDGSJDGS322DS",
+        "quantity": 2
+    },
+    {
+        "productId": "AMDGSHJDDDGSJDGS322DS",
+        "quantity": 12
+    }
+]
+```
