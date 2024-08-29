@@ -21,8 +21,20 @@ public class OrderController {
     
     @PostMapping
     public Mono<ResponseEntity<TakenOrderResponse>> takeOrder(@RequestBody OrderDetails orderDetails) {
-        return Mono.fromCallable(() -> orderService.takeOrder(orderDetails))
+        return Mono.fromSupplier(() -> {
+                simulateNetworkDelay();
+                return orderService.takeOrder(orderDetails);
+            })
             .map(ResponseEntity::ok);
+    }
+
+    private void simulateNetworkDelay(){
+        
+        try {
+            Thread.sleep(2000);  // Simulate a 2-second delay
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
 
