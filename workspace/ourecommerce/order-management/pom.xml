@@ -8,8 +8,10 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>order-management</artifactId>
+	<groupId>com.ourecommerce.ordermanagement</groupId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>order-management</name>
+    <packaging>pom</packaging>
+    <name>order-management</name>
 	<description>Order Management</description>
 	<url/>
 	<licenses>
@@ -18,7 +20,11 @@
 	<developers>
 		<developer/>
 	</developers>
-	<scm>
+    <modules>
+        <module>order-management-api</module>
+		<module>order-management-service</module>
+	</modules>
+    <scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>

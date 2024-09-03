@@ -1,4 +1,4 @@
-package com.ourecommerce.ordermanagement;
+package com.ourecommerce.ordermanagement.api;
 
 public class OrderEvent{
     private final String orderId;

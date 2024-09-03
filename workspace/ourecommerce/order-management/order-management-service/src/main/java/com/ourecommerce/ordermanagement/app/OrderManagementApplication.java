@@ -1,4 +1,4 @@
-package com.ourecommerce.ordermanagement;
+package com.ourecommerce.ordermanagement.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

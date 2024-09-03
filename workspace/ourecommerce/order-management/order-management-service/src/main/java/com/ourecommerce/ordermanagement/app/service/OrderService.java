@@ -1,5 +1,7 @@
-package com.ourecommerce.ordermanagement;
+package com.ourecommerce.ordermanagement.app.service;
 
+import com.ourecommerce.ordermanagement.api.OrderDetails;
+import com.ourecommerce.ordermanagement.api.TakenOrderResponse;
 import org.springframework.stereotype.Service;
 
 @Service

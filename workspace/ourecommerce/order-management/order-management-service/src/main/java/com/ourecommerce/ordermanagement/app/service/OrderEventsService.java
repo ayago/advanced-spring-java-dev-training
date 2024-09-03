@@ -1,5 +1,6 @@
-package com.ourecommerce.ordermanagement;
+package com.ourecommerce.ordermanagement.app.service;
 
+import com.ourecommerce.ordermanagement.api.OrderEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 

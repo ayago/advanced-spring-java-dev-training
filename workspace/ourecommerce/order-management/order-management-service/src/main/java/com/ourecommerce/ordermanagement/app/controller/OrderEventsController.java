@@ -1,5 +1,7 @@
-package com.ourecommerce.ordermanagement;
+package com.ourecommerce.ordermanagement.app.controller;
 
+import com.ourecommerce.ordermanagement.api.OrderEvent;
+import com.ourecommerce.ordermanagement.app.service.OrderEventsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -9,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/inventory-management/inventory-management-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/inventory-management/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/inventory-management/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-management/order-management-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-management/order-management-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/product-management/product-management-api/src/main/java" charset="UTF-8" />
