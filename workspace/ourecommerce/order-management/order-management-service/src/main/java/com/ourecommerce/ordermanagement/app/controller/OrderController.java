@@ -1,6 +1,8 @@
 package com.ourecommerce.ordermanagement.app.controller;
 
 import com.ourecommerce.ordermanagement.api.OrderDetails;
+import com.ourecommerce.ordermanagement.api.PlaceOrder;
+import com.ourecommerce.ordermanagement.api.PlaceOrderResponse;
 import com.ourecommerce.ordermanagement.api.TakenOrderResponse;
 import com.ourecommerce.ordermanagement.app.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,10 @@ public class OrderController {
     }
     
     @PostMapping
-    public Mono<ResponseEntity<TakenOrderResponse>> takeOrder(@RequestBody OrderDetails orderDetails) {
+    public Mono<ResponseEntity<PlaceOrderResponse>> takeOrder(@RequestBody PlaceOrder orderDetails) {
         return Mono.fromSupplier(() -> {
                 simulateNetworkDelay();
-                return orderService.takeOrder(orderDetails);
+                return orderService.placeOrder(orderDetails);
             })
             .map(ResponseEntity::ok);
     }

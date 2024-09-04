@@ -26,11 +26,11 @@ public class OrderManagementApplication {
 			System.out.println(Instant.now() + " Loop: " + i + " " + "after MONO");
 		}
 		
-		TimeUnit.SECONDS.sleep(10);
+		TimeUnit.SECONDS.sleep(1);
 	}
 	
 	public static Mono<String> getString() {
-		return Mono.delay(Duration.ofSeconds(10))
+		return Mono.delay(Duration.ofSeconds(1))
 			.map(it -> "hello world");
 	}
 
