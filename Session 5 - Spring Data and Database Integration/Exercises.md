@@ -9,5 +9,5 @@
 
 1. Install PostgreSQL [version 16.4](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 2. Install a GUI to see/interact with PostgreSQL. [DBViz](https://www.dbvis.com/download/) is recommended
-3. Install MongoDB locally. See installation steps [here](https://treehouse.github.io/installation-guides/mac/mongo-mac.html)
+3. Install MongoDB locally. See installation steps [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
 4. Install a GUI to interact with MongoDB. [MongoDB Compass](https://www.mongodb.com/docs/compass/current/install/) is recommended.
