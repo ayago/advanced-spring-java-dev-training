@@ -5,7 +5,7 @@
 * **Exercise 5.5:** Use Spring Data to create new product, persist black listing of an item, and retrieve product details
 * **Exercise 5.6:** Use Spring Transaction Management to rollback an order if an exception is encountered while persisting an item or an order.
 
-Prerequisites:
+### Prerequisites:
 
 1. Install PostgreSQL [version 16.4](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 2. Install a GUI to see/interact with PostgreSQL. [DBViz](https://www.dbvis.com/download/) is recommended
