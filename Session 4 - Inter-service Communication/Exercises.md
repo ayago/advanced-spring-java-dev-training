@@ -18,9 +18,11 @@
     {"itemCode":"Pandesal","count":6}
     ```
 
-    * **Exercise 4.3:** Share data on Order Service and Inventory Service when Payment Service confirms payment using RabbitMQ for event-driven architecture
+    * **Exercise 4.3:** Share data on Order Service and Inventory Service when Product Service produces a black listed product event using RabbitMQ for event-driven architecture
   
     ```json
-    //send to queue reserve_items - event format
-    {"orderCode":"10029"}
+    //send to exchange product_catalog_exchange - event format
+    //inventory listens at inventory_product_catalog_queue
+    //order listens at order_product_catalog_queue
+    {"productCode":"10029"}
     ```

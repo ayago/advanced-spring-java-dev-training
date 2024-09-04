@@ -42,7 +42,7 @@ public class OrderController {
     private void simulateNetworkDelay(){
         
         try {
-            Thread.sleep(2000);  // Simulate a 2-second delay
+            Thread.sleep(100);  // Simulate a 2-second delay
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
