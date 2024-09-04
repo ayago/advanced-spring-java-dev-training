@@ -30,6 +30,22 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ourecommerce.productmanagement</groupId>
+            <artifactId>product-management-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.ourecommerce.inventorymanagement</groupId>
             <artifactId>inventory-management-client</artifactId>
             <version>1.0-SNAPSHOT</version>
