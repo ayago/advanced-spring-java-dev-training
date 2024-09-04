@@ -14,6 +14,6 @@ public class OrderEventsSender{
     }
     
     public void reserveItems(OrderPlaced message) {
-        rabbitTemplate.convertAndSend("reserve_items", message);
+        rabbitTemplate.convertAndSend("new_items", message);
     }
 }

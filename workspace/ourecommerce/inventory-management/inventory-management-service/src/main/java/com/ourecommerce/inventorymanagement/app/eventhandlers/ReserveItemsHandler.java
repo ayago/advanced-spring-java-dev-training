@@ -5,8 +5,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReserveItemsHandler{
-    @RabbitListener(queues = "reserve_items")
+    
+    @RabbitListener(queues = "new_items")
     public void receiveMessage(String message) {
-        System.out.println("Received: " + message);
+        try{
+            Thread.sleep(3000);
+            System.out.println("Received: " + message);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    @RabbitListener(queues = "inventory_product_catalog_queue")
+    public void processBlackList(String message) {
+        System.out.println("Processing blacklisted product: " + message);
     }
 }
