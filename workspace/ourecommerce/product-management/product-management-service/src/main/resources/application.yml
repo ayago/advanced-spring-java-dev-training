@@ -1,8 +1,22 @@
 server:
-  port: 8083
+  port: 0
 
 spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/local
       database: local
+  application:
+    name: product-management
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+logging:
+  level:
+    com.netflix.discovery: DEBUG
+    com.netflix.eureka: DEBUG

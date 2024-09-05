@@ -1,0 +1,24 @@
+server:
+  port: 8761
+eureka:
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000
+    renewal-interval-in-ms: 30000
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.netflix.eureka: DEBUG
+    com.netflix.discovery: DEBUG
+    com.netflix.eureka: DEBUG
+    feign.client: DEBUG
+  loggers:
+    # Additional logger configurations if needed
+    org.springframework.cloud.netflix.eureka:
+      level: DEBUG
+    org.springframework.web:
+      level: DEBUG
