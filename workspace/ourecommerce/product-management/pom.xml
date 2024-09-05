@@ -24,6 +24,7 @@
     <modules>
         <module>product-management-api</module>
         <module>product-management-service</module>
+        <module>product-management-client</module>
     </modules>
     <scm>
         <connection/>

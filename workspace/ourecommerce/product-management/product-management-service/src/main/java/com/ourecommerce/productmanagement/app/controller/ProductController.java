@@ -2,6 +2,8 @@ package com.ourecommerce.productmanagement.app.controller;
 
 import com.ourecommerce.productmanagement.api.AddNewProductResponse;
 import com.ourecommerce.productmanagement.api.ProductDetailsRequest;
+import com.ourecommerce.productmanagement.api.ProductDetailsResponse;
+import com.ourecommerce.productmanagement.api.endpoint.ProductManagementAPI;
 import com.ourecommerce.productmanagement.app.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController{
+public class ProductController implements ProductManagementAPI{
     
     private final ProductService productService;
     
@@ -24,5 +26,10 @@ public class ProductController{
         @RequestBody ProductDetailsRequest newProductRequest){
         AddNewProductResponse response = productService.registerNewProduct(newProductRequest);
         return ResponseEntity.ok(response);
+    }
+    
+    public ResponseEntity<ProductDetailsResponse> getProduct(String productCode){
+        ProductDetailsResponse product = productService.retrieveProductDetails(productCode);
+        return ResponseEntity.ok(product);
     }
 }

@@ -3,6 +3,7 @@ package com.ourecommerce.productmanagement.app.service;
 import com.ourecommerce.productmanagement.api.AddNewProductResponse;
 import com.ourecommerce.productmanagement.api.ProductBlacklistedEvent;
 import com.ourecommerce.productmanagement.api.ProductDetailsRequest;
+import com.ourecommerce.productmanagement.api.ProductDetailsResponse;
 import com.ourecommerce.productmanagement.app.document.Product;
 import com.ourecommerce.productmanagement.app.repository.ProductRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -34,5 +35,16 @@ public class ProductService{
             .setDescription(request.getDescription())
             .setName(request.getName())
             .setStatus("ACTIVE");
+    }
+    
+    public ProductDetailsResponse retrieveProductDetails(String productCode){
+        return productRepository.findById(productCode)
+            .map(product -> new ProductDetailsResponse()
+                .setDescription(product.getDescription())
+                .setName(product.getName())
+                .setStatus(product.getStatus())
+                .setProductCode(product.getId())
+            )
+            .orElseThrow();
     }
 }
