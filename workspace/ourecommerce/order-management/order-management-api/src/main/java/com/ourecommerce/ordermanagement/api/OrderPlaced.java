@@ -1,20 +1,40 @@
 package com.ourecommerce.ordermanagement.api;
 
+import java.util.List;
+
 public class OrderPlaced{
     
-    private final String itemCode;
-    private final Integer count;
+    private List<OrderPlacedItem> items;
     
-    public OrderPlaced(String itemCode, Integer count){
-        this.itemCode = itemCode;
-        this.count = count;
+    public OrderPlaced setItems(List<OrderPlacedItem> items){
+        this.items = items;
+        return this;
     }
     
-    public String getItemCode(){
-        return itemCode;
+    public List<OrderPlacedItem> getItems(){
+        return items;
     }
     
-    public Integer getCount(){
-        return count;
+    public static class OrderPlacedItem{
+        private String productId;
+        private Integer count;
+        
+        public String getProductId(){
+            return productId;
+        }
+        
+        public OrderPlacedItem setProductId(String productId){
+            this.productId = productId;
+            return this;
+        }
+        
+        public Integer getCount(){
+            return count;
+        }
+        
+        public OrderPlacedItem setCount(Integer count){
+            this.count = count;
+            return this;
+        }
     }
 }
