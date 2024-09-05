@@ -8,6 +8,7 @@ import com.ourecommerce.ordermanagement.api.TakenOrderResponse;
 import com.ourecommerce.ordermanagement.app.entity.Order;
 import com.ourecommerce.ordermanagement.app.entity.OrderItem;
 import com.ourecommerce.ordermanagement.app.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
