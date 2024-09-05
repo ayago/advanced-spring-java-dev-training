@@ -20,6 +20,16 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
 
+feign:
+  client:
+    config:
+      default:
+        loadBalancer:
+          enabled: true
+
+load-balancers-for: >
+  product-management
+
 logging:
   level:
     com.netflix.discovery: DEBUG
