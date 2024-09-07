@@ -1,0 +1,45 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: oe-ag
+  cloud:
+    gateway:
+      routes:
+        - id: order-management
+          uri: lb://ORDER-MANAGEMENT
+          predicates:
+            - Path=/orders/**
+        - id: product-management
+          uri: lb://PRODUCT-MANAGEMENT
+          predicates:
+            - Path=/products/**
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/product-inventory/**
+    discovery:
+      client:
+        simple:
+          instances:
+            inventory-management:
+              - serviceId: inventory-management
+                instanceId: inventory-management-1
+                host: localhost
+                port: 8181
+                secure: false
+              - serviceId: inventory-management
+                instanceId: inventory-management-2
+                host: localhost
+                port: 8182
+                secure: false
+    loadbalancer:
+      clients:
+        inventory-management:
+          configurations: health-check
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
