@@ -28,7 +28,7 @@ feign:
           enabled: true
 
 load-balancers-for: >
-  product-management
+  product-management  
 
 logging:
   level:

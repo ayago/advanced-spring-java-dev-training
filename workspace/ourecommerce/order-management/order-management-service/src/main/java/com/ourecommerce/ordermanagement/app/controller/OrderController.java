@@ -27,10 +27,7 @@ public class OrderController {
     
     @PostMapping
     public Mono<ResponseEntity<PlaceOrderResponse>> takeOrder(@RequestBody PlaceOrder orderDetails) {
-        return Mono.fromSupplier(() -> {
-                simulateNetworkDelay();
-                return orderService.placeOrder(orderDetails);
-            })
+        return orderService.placeOrder(orderDetails)
             .map(ResponseEntity::ok);
     }
     
