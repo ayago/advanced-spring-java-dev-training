@@ -1,11 +1,11 @@
-package com.ourecommerce.ordermanagement.app.entity;
+package com.ourecommerce.ordermanagement.app.db.entity;
 
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "om_order_item")
-public class OrderItem {
+public class OrderItemDocument{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,28 +17,30 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer count;
     
-    // Getters and Setters
-    public Long getId() {
+    public Long getId(){
         return id;
     }
     
-    public void setId(Long id) {
+    public OrderItemDocument setId(Long id){
         this.id = id;
+        return this;
     }
     
-    public String getProductId() {
+    public String getProductId(){
         return productId;
     }
     
-    public void setProductId(String productId) {
+    public OrderItemDocument setProductId(String productId){
         this.productId = productId;
+        return this;
     }
     
-    public Integer getCount() {
+    public Integer getCount(){
         return count;
     }
     
-    public void setCount(Integer count) {
+    public OrderItemDocument setCount(Integer count){
         this.count = count;
+        return this;
     }
 }

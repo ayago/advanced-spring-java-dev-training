@@ -1,4 +1,4 @@
-package com.ourecommerce.ordermanagement.app.entity;
+package com.ourecommerce.ordermanagement.app.db.entity;
 
 import jakarta.persistence.*;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "om_order")
-public class Order {
+public class OrderDocument{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,31 +17,33 @@ public class Order {
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private List<OrderItem> items;
+    private List<OrderItemDocument> items;
     
-    // Getters and Setters
-    public Long getId() {
+    public Long getId(){
         return id;
     }
     
-    public void setId(Long id) {
+    public OrderDocument setId(Long id){
         this.id = id;
+        return this;
     }
     
-    public String getStatus() {
+    public String getStatus(){
         return status;
     }
     
-    public void setStatus(String status) {
+    public OrderDocument setStatus(String status){
         this.status = status;
+        return this;
     }
     
-    public List<OrderItem> getItems() {
+    public List<OrderItemDocument> getItems(){
         return items;
     }
     
-    public void setItems(List<OrderItem> items) {
+    public OrderDocument setItems(List<OrderItemDocument> items){
         this.items = items;
+        return this;
     }
 }
 

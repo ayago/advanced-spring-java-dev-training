@@ -41,6 +41,12 @@
 
         <dependency>
             <groupId>com.ourecommerce.ordermanagement</groupId>
+            <artifactId>order-management-domain</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ourecommerce.ordermanagement</groupId>
             <artifactId>order-management-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

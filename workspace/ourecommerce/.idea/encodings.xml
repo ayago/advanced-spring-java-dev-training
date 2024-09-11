@@ -17,6 +17,8 @@
     <file url="file://$PROJECT_DIR$/operations/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/order-management-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/order-management-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-management/order-management-domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-management/order-management-domain/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/order-management-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/order-management-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-management/src/main/java" charset="UTF-8" />
