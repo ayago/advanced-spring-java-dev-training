@@ -1,0 +1,3 @@
+* **Exercise 8.1:** Implement a Circuit Breaker pattern using `spring-cloud-starter-circuitbreaker-reactor-resilience4j` in Order Service to handle service failures from Product Service gracefully.
+* **Exercise 8.2:** Modify Order Service to make a synchronous call to Inventory Service during placement of order instead of sending event to reserve items. Implement the Retry pattern to handle failures in Inventory System.
+* **Exercise 8.3:** Setup health checks and monitoring for all microservices using actuator endpoints.
