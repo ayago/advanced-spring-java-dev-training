@@ -1,4 +1,4 @@
-package com.ourecommerce.ordermanagement.app.clients.loadbalancer;
+package com.ourecommerce.ordermanagement.app.config;
 
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.loadbalancer.core.RandomLoadBalancer;

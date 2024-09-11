@@ -4,6 +4,7 @@ import java.util.List;
 
 public class OrderPlaced{
     
+    private String orderId;
     private List<OrderPlacedItem> items;
     
     public OrderPlaced setItems(List<OrderPlacedItem> items){
@@ -13,6 +14,15 @@ public class OrderPlaced{
     
     public List<OrderPlacedItem> getItems(){
         return items;
+    }
+    
+    public String getOrderId(){
+        return orderId;
+    }
+    
+    public OrderPlaced setOrderId(String orderId){
+        this.orderId = orderId;
+        return this;
     }
     
     public static class OrderPlacedItem{

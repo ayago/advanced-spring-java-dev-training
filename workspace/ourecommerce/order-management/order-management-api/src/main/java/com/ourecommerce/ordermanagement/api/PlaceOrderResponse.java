@@ -3,9 +3,9 @@ package com.ourecommerce.ordermanagement.api;
 public class PlaceOrderResponse{
     
     private final String status;
-    private final Long orderId;
+    private final String orderId;
     
-    public PlaceOrderResponse(Long id, String status){
+    public PlaceOrderResponse(String id, String status){
         this.orderId = id;
         this.status = status;
     }
@@ -14,7 +14,7 @@ public class PlaceOrderResponse{
         return status;
     }
     
-    public Long getOrderId(){
+    public String getOrderId(){
         return orderId;
     }
 }

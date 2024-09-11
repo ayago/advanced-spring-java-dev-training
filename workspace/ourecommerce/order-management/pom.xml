@@ -23,6 +23,7 @@
     <modules>
         <module>order-management-api</module>
 		<module>order-management-service</module>
+		<module>order-management-domain</module>
 	</modules>
     <scm>
 		<connection/>
