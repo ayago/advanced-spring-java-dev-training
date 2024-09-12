@@ -27,8 +27,16 @@ feign:
         loadBalancer:
           enabled: true
 
-load-balancers-for: >
-  product-management  
+resilience4j:
+  circuitbreaker:
+    instances:
+      productServiceCircuitBreaker:
+        slidingWindowSize: 4
+        failureRateThreshold: 50
+        waitDurationInOpenState: 50s
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: COUNT_BASED
+        registerHealthIndicator: true
 
 logging:
   level:
