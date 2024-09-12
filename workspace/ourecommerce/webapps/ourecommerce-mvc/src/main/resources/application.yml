@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: guest
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

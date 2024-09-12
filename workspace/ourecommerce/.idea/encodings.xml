@@ -33,5 +33,11 @@
     <file url="file://$PROJECT_DIR$/product-management/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/ourecommerce-jwt-mvc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/ourecommerce-jwt-mvc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/ourecommerce-mvc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/ourecommerce-mvc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/src/main/resources" charset="UTF-8" />
   </component>
 </project>

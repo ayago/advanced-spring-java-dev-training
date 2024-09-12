@@ -13,6 +13,7 @@
         <module>order-management</module>
         <module>inventory-management</module>
         <module>operations</module>
+        <module>webapps</module>
     </modules>
 
     <properties>

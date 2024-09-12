@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "om_order_item")
-public class OrderItemDocument{
+public class OrderItemRecord{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +17,24 @@ public class OrderItemDocument{
     @Column(nullable = false)
     private Integer count;
     
+    @ManyToOne
+    @JoinColumn(name="order_id", nullable=false)
+    private OrderRecord owningOrder;
+    
+    public OrderRecord getOwningOrder(){
+        return owningOrder;
+    }
+    
+    public OrderItemRecord setOwningOrder(OrderRecord owningOrder){
+        this.owningOrder = owningOrder;
+        return this;
+    }
+    
     public Long getId(){
         return id;
     }
     
-    public OrderItemDocument setId(Long id){
+    public OrderItemRecord setId(Long id){
         this.id = id;
         return this;
     }
@@ -30,7 +43,7 @@ public class OrderItemDocument{
         return productId;
     }
     
-    public OrderItemDocument setProductId(String productId){
+    public OrderItemRecord setProductId(String productId){
         this.productId = productId;
         return this;
     }
@@ -39,7 +52,7 @@ public class OrderItemDocument{
         return count;
     }
     
-    public OrderItemDocument setCount(Integer count){
+    public OrderItemRecord setCount(Integer count){
         this.count = count;
         return this;
     }

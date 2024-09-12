@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "om_order")
-public class OrderDocument{
+public class OrderRecord{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,15 +15,14 @@ public class OrderDocument{
     @Column(nullable = false)
     private String status;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private List<OrderItemDocument> items;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "owningOrder")
+    private List<OrderItemRecord> items;
     
     public Long getId(){
         return id;
     }
     
-    public OrderDocument setId(Long id){
+    public OrderRecord setId(Long id){
         this.id = id;
         return this;
     }
@@ -32,16 +31,16 @@ public class OrderDocument{
         return status;
     }
     
-    public OrderDocument setStatus(String status){
+    public OrderRecord setStatus(String status){
         this.status = status;
         return this;
     }
     
-    public List<OrderItemDocument> getItems(){
+    public List<OrderItemRecord> getItems(){
         return items;
     }
     
-    public OrderDocument setItems(List<OrderItemDocument> items){
+    public OrderRecord setItems(List<OrderItemRecord> items){
         this.items = items;
         return this;
     }

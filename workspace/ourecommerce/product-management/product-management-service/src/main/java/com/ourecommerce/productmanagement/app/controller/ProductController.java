@@ -6,10 +6,13 @@ import com.ourecommerce.productmanagement.api.ProductDetailsResponse;
 import com.ourecommerce.productmanagement.api.endpoint.ProductManagementAPI;
 import com.ourecommerce.productmanagement.app.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -31,5 +34,10 @@ public class ProductController implements ProductManagementAPI{
     public ResponseEntity<ProductDetailsResponse> getProduct(String productCode){
         ProductDetailsResponse product = productService.retrieveProductDetails(productCode);
         return ResponseEntity.ok(product);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<ProductDetailsResponse>> getProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 }

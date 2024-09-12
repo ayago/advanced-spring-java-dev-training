@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Order Products</title>
+    </head>
+    <body>
+        <h1>Order Products</h1>
+        <form th:action="@{/orders}" method="post" th:object="${orderRequest}">
+            <div id="order-items-container">
+                <div>
+                    <label for="product0">Select Product:</label>
+                    <select id="product0" name="items[0].productId">
+                        <option th:each="product : ${products}"
+                                th:value="${product.productCode}"
+                                th:text="${product.name}">Product Name</option>
+                    </select>
+
+                    <label for="count0">Quantity:</label>
+                    <input type="number" id="count0" name="items[0].count" value="1"/>
+                </div>
+            </div>
+
+            <button type="button" onclick="addItem()">Add Item</button>
+            <button type="submit">Place Order</button>
+        </form>
+
+        <script type="text/javascript" th:inline="javascript">
+            let itemIndex = 1;
+            const products = /*[[${products}]]*/ [];
+            const productOptions = products.map(product =>
+                `<option value="${product.productId}">${product.name}</option>`
+            ).join('');
+
+            console.log(products);
+            function addItem() {
+                const container = document.getElementById('order-items-container');
+
+                const productOptions = products.map(product =>
+                    `<option value="${product.productCode}">${product.name}</option>`
+                ).join('');
+
+                const newItemHtml = `
+                    <div id="order_item_${itemIndex}">
+                        <label for="product${itemIndex}">Select Product:</label>
+                        <select id="product${itemIndex}" name="items[${itemIndex}].productId">
+                            ${productOptions}
+                        </select>
+
+                        <label for="count${itemIndex}">Quantity:</label>
+                        <input type="number" id="count${itemIndex}" name="items[${itemIndex}].count" value="1"/>
+
+                        <button type="button" onclick="removeItem(${itemIndex})">Remove</button>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', newItemHtml);
+                itemIndex++;
+            }
+
+            function removeItem(index) {
+                const orderItem = document.getElementById(`order_item_${index}`);
+                orderItem.remove();
+            }
+        </script>
+    </body>
+</html>
+
