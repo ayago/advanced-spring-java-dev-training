@@ -2,6 +2,7 @@ package com.ourecommerce.webapps.mvc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -11,7 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -19,7 +23,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     
     @Bean
-    public UserDetailsService userDetailsService() {
+    @Profile("sec-im")
+    public UserDetailsService imUserDetailsService() {
         UserDetails user = User.withUsername("user")
             .password(passwordEncoder().encode("password"))
             .roles("USER")
@@ -36,6 +41,15 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    
+    @Bean
+    @Profile("sec-jdbc")
+    public UserDetailsService jdbcUserDetailsService(DataSource dataSource) {
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+        userDetailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?");
+        userDetailsManager.setAuthoritiesByUsernameQuery("SELECT username, authority FROM authorities WHERE username = ?");
+        return userDetailsManager;
     }
     
     @Bean
