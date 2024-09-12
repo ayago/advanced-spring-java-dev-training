@@ -1,12 +1,17 @@
 package com.ourecommerce.productmanagement.api;
 
 public class ProductDetailsRequest{
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     
-    public ProductDetailsRequest(String name, String description){
+    public ProductDetailsRequest setName(String name){
         this.name = name;
+        return this;
+    }
+    
+    public ProductDetailsRequest setDescription(String description){
         this.description = description;
+        return this;
     }
     
     public String getName(){

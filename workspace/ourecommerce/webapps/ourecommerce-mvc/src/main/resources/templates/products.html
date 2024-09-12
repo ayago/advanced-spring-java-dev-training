@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Products</title>
+        <script>
+            function addItem() {
+                // Function to dynamically add new product selection fields
+                const container = document.getElementById('order-items-container');
+                const index = container.childElementCount;
+
+                const newItemHtml = `
+                    <div>
+                        <label for="product${index}">Select Product:</label>
+                        <select id="product${index}" name="items[${index}].productId">
+                            <!-- Populate options with products dynamically -->
+                            <option th:each="product : ${products}"
+                                    th:value="${product.productId}"
+                                    th:text="${product.name}"></option>
+                        </select>
+
+                        <label for="count${index}">Quantity:</label>
+                        <input type="number" id="count${index}" name="items[${index}].count" value="1"/>
+
+                        <button type="button" onclick="removeItem(${index})">Remove</button>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', newItemHtml);
+            }
+
+            function removeItem(index) {
+                // Function to remove product selection fields
+                const container = document.getElementById('order-items-container');
+                const itemToRemove = container.querySelector(`div:nth-child(${index + 1})`);
+                container.removeChild(itemToRemove);
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Products</h1>
+        <div>
+            <form th:action="@{/products}" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" /><br/>
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" /><br/>
+                <button type="submit">Add Product</button>
+            </form>
+            <table>
+                <tr>
+                    <th>Product Code</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.productCode}">Product Code</td>
+                    <td th:text="${product.name}">Name</td>
+                    <td th:text="${product.description}">Description</td>
+                    <td th:text="${product.status}">Status</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

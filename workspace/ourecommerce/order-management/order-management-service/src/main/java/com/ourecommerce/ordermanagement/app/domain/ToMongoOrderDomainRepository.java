@@ -1,8 +1,8 @@
 package com.ourecommerce.ordermanagement.app.domain;
 
-import com.ourecommerce.ordermanagement.app.db.OrderDocumentRepository;
-import com.ourecommerce.ordermanagement.app.db.entity.OrderDocument;
-import com.ourecommerce.ordermanagement.app.db.entity.OrderItemDocument;
+import com.ourecommerce.ordermanagement.app.db.OrderRecordRepository;
+import com.ourecommerce.ordermanagement.app.db.entity.OrderRecord;
+import com.ourecommerce.ordermanagement.app.db.entity.OrderItemRecord;
 import com.ourecommerce.ordermanagement.domain.adapters.OrderDomainRepository;
 import com.ourecommerce.ordermanagement.domain.entity.Order;
 import com.ourecommerce.ordermanagement.domain.entity.Order.OrderItem;
@@ -17,44 +17,45 @@ import java.util.Optional;
 @Component
 public class ToMongoOrderDomainRepository implements OrderDomainRepository{
     
-    private final OrderDocumentRepository orderDocumentRepository;
+    private final OrderRecordRepository orderRecordRepository;
     
-    public ToMongoOrderDomainRepository(OrderDocumentRepository orderDocumentRepository){
-        this.orderDocumentRepository = orderDocumentRepository;
+    public ToMongoOrderDomainRepository(OrderRecordRepository orderRecordRepository){
+        this.orderRecordRepository = orderRecordRepository;
     }
     
     @Override
     @Transactional
     public Mono<OrderId> save(Order order){
-        return Mono.fromSupplier(() -> convertToDocument(order))
-            .map(orderDocumentRepository::save)
+        return Mono.fromSupplier(() -> deriveRecord(order))
+            .map(orderRecordRepository::save)
             .map(od -> new OrderId(od.getId()));
     }
     
-    private OrderDocument convertToDocument(Order order){
+    private OrderRecord deriveRecord(Order order){
         
-        OrderDocument documentEquivalent = Optional.ofNullable(order.getId())
-            .map(id -> new OrderDocument()
+        OrderRecord recordEquivalent = Optional.ofNullable(order.getId())
+            .map(id -> new OrderRecord()
                 .setId(order.getId().getRawValue()))
-            .orElseGet(OrderDocument::new);
+            .orElseGet(OrderRecord::new);
         
-        return documentEquivalent
+        return recordEquivalent
             .setStatus(order.getStatus())
-            .setItems(convertToDocument(order.getItems()));
+            .setItems(deriveRecord(recordEquivalent, order.getItems()));
     }
     
-    private List<OrderItemDocument> convertToDocument(List<OrderItem> items){
+    private List<OrderItemRecord> deriveRecord(OrderRecord orderRecord, List<OrderItem> items){
         return items.stream()
-            .map(this::convertToDocument)
+            .map(item -> deriveRecord(orderRecord, item))
             .toList();
     }
     
-    private OrderItemDocument convertToDocument(OrderItem orderItem){
-        OrderItemDocument documentEquivalent = Optional.ofNullable(orderItem.getId())
-            .map(orderItemId -> new OrderItemDocument().setId(orderItemId))
-            .orElseGet(OrderItemDocument::new);
+    private OrderItemRecord deriveRecord(OrderRecord orderRecord, OrderItem orderItem){
+        OrderItemRecord recordEquivalent = Optional.ofNullable(orderItem.getId())
+            .map(orderItemId -> new OrderItemRecord().setId(orderItemId))
+            .orElseGet(OrderItemRecord::new);
         
-        return documentEquivalent
+        return recordEquivalent
+            .setOwningOrder(orderRecord)
             .setCount(orderItem.getCount())
             .setProductId(orderItem.getProductId());
     }

@@ -9,6 +9,8 @@ import com.ourecommerce.productmanagement.app.repository.ProductRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService{
     
@@ -39,12 +41,21 @@ public class ProductService{
     
     public ProductDetailsResponse retrieveProductDetails(String productCode){
         return productRepository.findById(productCode)
-            .map(product -> new ProductDetailsResponse()
-                .setDescription(product.getDescription())
-                .setName(product.getName())
-                .setStatus(product.getStatus())
-                .setProductCode(product.getId())
-            )
+            .map(ProductService::translateToResponse)
             .orElseThrow();
+    }
+    
+    private static ProductDetailsResponse translateToResponse(Product product){
+        return new ProductDetailsResponse()
+            .setDescription(product.getDescription())
+            .setName(product.getName())
+            .setStatus(product.getStatus())
+            .setProductCode(product.getId());
+    }
+    
+    public List<ProductDetailsResponse> getAllProducts(){
+        return productRepository.findAll().stream()
+            .map(ProductService::translateToResponse)
+            .toList();
     }
 }
