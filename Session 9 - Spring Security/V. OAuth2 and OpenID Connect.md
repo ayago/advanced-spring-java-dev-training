@@ -113,6 +113,8 @@ The Hybrid Flow combines elements of both the Authorization Code Flow and the Im
 
 ## 4. Client Credentials Flow
 
+![alt text](Assets/client-credentials-flow.png)
+
 ### Description
 The Client Credentials Flow is used for server-to-server communication where no user is involved. The client directly requests tokens from the authorization server using its own credentials.
 
