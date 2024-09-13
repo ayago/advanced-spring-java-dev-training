@@ -68,6 +68,8 @@ OIDC defines several authorization flows for different scenarios. Each flow has 
 
 ## 1. Authorization Code Flow
 
+![alt text](Assets/oidc-authorization-code-flow.png)
+
 ### Description
 The Authorization Code Flow is the most common flow used in web applications. It involves exchanging an authorization code for an access token and an ID token. This flow is suitable for server-side applications and provides a high level of security as the tokens are never exposed to the browser.
 
