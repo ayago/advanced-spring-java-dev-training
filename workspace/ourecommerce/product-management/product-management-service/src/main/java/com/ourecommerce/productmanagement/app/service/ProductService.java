@@ -29,7 +29,7 @@ public class ProductService{
     public AddNewProductResponse registerNewProduct(ProductDetailsRequest request){
         Product newProduct = resolveProductFrom(request);
         productRepository.save(newProduct);
-        return new AddNewProductResponse(newProduct.getId());
+        return new AddNewProductResponse().setProductId(newProduct.getId());
     }
     
     private Product resolveProductFrom(ProductDetailsRequest request){

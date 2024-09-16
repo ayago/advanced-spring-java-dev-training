@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: guest
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+  session:
+    store-type: none
+  servlet:
+    session:
+      cookie:
+        enabled: false
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

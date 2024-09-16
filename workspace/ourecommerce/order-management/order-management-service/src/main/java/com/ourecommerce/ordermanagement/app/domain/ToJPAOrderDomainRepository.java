@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ToMongoOrderDomainRepository implements OrderDomainRepository{
+public class ToJPAOrderDomainRepository implements OrderDomainRepository{
     
     private final OrderRecordRepository orderRecordRepository;
     
-    public ToMongoOrderDomainRepository(OrderRecordRepository orderRecordRepository){
+    public ToJPAOrderDomainRepository(OrderRecordRepository orderRecordRepository){
         this.orderRecordRepository = orderRecordRepository;
     }
     

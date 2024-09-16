@@ -1,10 +1,11 @@
 package com.ourecommerce.productmanagement.api;
 
 public class AddNewProductResponse{
-    private final String productId;
+    private String productId;
     
-    public AddNewProductResponse(String productId){
+    public AddNewProductResponse setProductId(String productId){
         this.productId = productId;
+        return this;
     }
     
     public String getProductId(){

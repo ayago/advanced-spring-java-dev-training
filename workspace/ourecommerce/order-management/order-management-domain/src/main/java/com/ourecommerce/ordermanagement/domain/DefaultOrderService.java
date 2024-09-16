@@ -40,7 +40,10 @@ public class DefaultOrderService implements OrderService{
                     OrderPlaced orderPlaced = constructEvent(order, orderId);
                     orderDomainEventPublisher.publishPlacedOrderEvent(orderPlaced);
                 })
-                .map(orderId -> new PlaceOrderResponse(orderId.toString(), order.getStatus()))
+                .map(orderId -> new PlaceOrderResponse()
+                    .setOrderId(orderId.toString())
+                    .setStatus(order.getStatus())
+                )
             );
     }
     

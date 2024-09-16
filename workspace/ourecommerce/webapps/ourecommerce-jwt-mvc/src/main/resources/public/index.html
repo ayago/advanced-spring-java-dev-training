@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript" src="/spa.js"></script>
+        <title>JWT SPA</title>
+        <style>
+            /* Hide all sections by default */
+            .page {
+              display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Login Form -->
+        <div id="login-page" class="page">
+            <h2>Login</h2>
+            <form id="login-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required /><br />
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required /><br />
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-error" style="color: red; display: none">
+                Invalid credentials
+            </p>
+        </div>
+
+        <!-- Order Page -->
+        <div id="order-page" class="page">
+            <h2>Order Products</h2>
+            <form id="order-form">
+                <div id="order-items-container">
+                    <div id="order_item_0">
+                        <label for="product0">Select Product:</label>
+                        <select id="product0" name="items[0].productCode"></select>
+
+                        <label for="count0">Quantity:</label>
+                        <input type="number" id="count0" name="items[0].count" value="1" />
+                    </div>
+                </div>
+                <button type="button" onclick="addItem()">Add Item</button>
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+
+        <!-- Products Page -->
+        <div id="product-page" class="page">
+            <h2>Manage Products</h2>
+            <form id="product-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required /><br />
+                <label for="description">Description:</label>
+                <input type="text" id="description" required /><br />
+                <button type="submit">Add Product</button>
+            </form>
+
+            <h3>Products List</h3>
+            <table id="products-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </body>
+</html>
