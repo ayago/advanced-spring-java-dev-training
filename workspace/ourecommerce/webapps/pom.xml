@@ -15,6 +15,7 @@
     <modules>
         <module>ourecommerce-mvc</module>
         <module>ourecommerce-jwt-mvc</module>
+        <module>ourecommerce-oidc</module>
     </modules>
 
     <properties>

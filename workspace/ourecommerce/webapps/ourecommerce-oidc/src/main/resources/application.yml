@@ -1,0 +1,35 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          auth0:
+            client-id: "mykMs8vzIcz6cST7SfBBY6k0ZuCr5np5"
+            client-secret: "E0GmbUfMZWbGmFbyT6K7ktPJ0oqSBS3b9mKH6tdJwpKUW4x_WSMRSh9kTuwzfeOd"
+            scope:
+              - openid
+              - profile
+              - email
+              - permissions
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: client_secret_post
+        provider:
+          auth0:
+            authorization-uri: https://dev-fbxfvo4eippvrgen.us.auth0.com/authorize
+            token-uri: https://dev-fbxfvo4eippvrgen.us.auth0.com/oauth/token
+            user-info-uri: https://dev-fbxfvo4eippvrgen.us.auth0.com/userinfo
+            jwk-set-uri: https://dev-fbxfvo4eippvrgen.us.auth0.com/.well-known/jwks.json
+            user-name-attribute: sub
+  oauth2:
+    client:
+      redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+# Session and cookie management  - Recommended
+server:
+  port: 8083
+  servlet:
+    session:
+      cookie:
+        secure: true
+        http-only: true
