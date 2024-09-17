@@ -9,6 +9,8 @@
 - [Lesson 7: API Gateway and Server Side Load Balancing](./Session%207%20-%20API%20Gateway%20and%20Server%20Side%20Load%20Balancing/)
 - [Lesson 8: Resilience and Fault Tolerance](./Session%208%20-%20Resilience%20and%20Fault%20Tolerance)
 - [Lesson 9: Spring Security](./Session%209%20-%20Spring%20Security/)
+- [Lesson 10: Monitoring and Logging](./Session%2010%20-%20Monitoring%20and%20Logging/)
+
 
 
 
