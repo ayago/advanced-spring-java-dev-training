@@ -10,6 +10,7 @@
 - [Lesson 8: Resilience and Fault Tolerance](./Session%208%20-%20Resilience%20and%20Fault%20Tolerance)
 - [Lesson 9: Spring Security](./Session%209%20-%20Spring%20Security/)
 - [Lesson 10: Monitoring and Logging](./Session%2010%20-%20Monitoring%20and%20Logging/)
+- [Lesson 11: Docker and Kubernetes](./Session%2011%20-%20Docker%20and%20Kubernetes/)
 
 
 
