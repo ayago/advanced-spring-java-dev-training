@@ -39,6 +39,14 @@ resilience4j:
         registerHealthIndicator: true
 
 logging:
+  file:
+    name: "${LOG_FILE_PARENT}/logs/order-management-service/application.log"
   level:
-    com.netflix.discovery: DEBUG
-    com.netflix.eureka: DEBUG
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  config: "classpath:logback-spring.xml"  # Point to custom logback configuration
+
+#  level:
+#    com.netflix.discovery: DEBUG
+#    com.netflix.eureka: DEBUG
