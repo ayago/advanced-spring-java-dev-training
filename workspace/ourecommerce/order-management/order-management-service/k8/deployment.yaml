@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-management-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-management
+  template:
+    metadata:
+      labels:
+        app: order-management
+    spec:
+      containers:
+        - name: order-management
+          image: order-management:latest
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: order-management-config
+          volumeMounts:
+            - name: logs-volume
+              mountPath: /logs
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+      volumes:
+        - name: logs-volume
+          emptyDir: {}

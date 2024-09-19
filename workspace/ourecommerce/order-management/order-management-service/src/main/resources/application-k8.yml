@@ -18,6 +18,11 @@ spring:
   application:
     name: order-management
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
 feign:
   client:
     config:
@@ -35,3 +40,12 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 2
         slidingWindowType: COUNT_BASED
         registerHealthIndicator: true
+
+logging:
+  file:
+    name: "${LOG_FILE_PARENT}/application.log"
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  config: "classpath:logback-spring.xml"  # Point to custom logback configuration
