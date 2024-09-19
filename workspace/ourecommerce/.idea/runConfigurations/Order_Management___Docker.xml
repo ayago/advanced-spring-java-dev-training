@@ -13,6 +13,14 @@
           </list>
         </option>
         <option name="sourceFilePath" value="order-management/order-management-service/Dockerfile" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/logs" />
+              <option name="hostPath" value="$PROJECT_DIR$/../../logs/order-management" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
       </settings>
     </deployment>
     <method v="2" />
