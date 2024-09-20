@@ -19,10 +19,4 @@ eureka:
     instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 logging:
-  file:
-    name: logs/application.log
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  level:
-    com.netflix.discovery: DEBUG
-    com.netflix.eureka: DEBUG
+  config: "classpath:logback-spring.xml"
