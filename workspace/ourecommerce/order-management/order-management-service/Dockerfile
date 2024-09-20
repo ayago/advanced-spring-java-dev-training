@@ -16,7 +16,7 @@ ENV EUREKA_URI=http://host.docker.internal:8761/eureka
 RUN mkdir -p ${LOG_FILE_PARENT}
 
 # Specify the mount point for external logging
-VOLUME ${LOG_FILE_PARENT}
+#VOLUME ${LOG_FILE_PARENT}
 
 # Copy the JAR file from the build context and rename it
 COPY target/order-management-service.jar /app/order-management-service.jar

@@ -1,51 +1,51 @@
-server:
-  port: 8081
-
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:guest}
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-  application:
-    name: order-management
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-
-feign:
-  client:
-    config:
-      default:
-        loadBalancer:
-          enabled: true
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      productServiceCircuitBreaker:
-        slidingWindowSize: 4
-        failureRateThreshold: 50
-        waitDurationInOpenState: 50s
-        permittedNumberOfCallsInHalfOpenState: 2
-        slidingWindowType: COUNT_BASED
-        registerHealthIndicator: true
-
-logging:
-  file:
-    name: "${LOG_FILE_PARENT}/application.log"
-  level:
-    root: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  config: "classpath:logback-spring.xml"  # Point to custom logback configuration
+#server:
+#  port: 8081
+#
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
+#    username: ${POSTGRES_USERNAME:postgres}
+#    password: ${POSTGRES_PASSWORD:guest}
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate:
+#      ddl-auto: none
+#    show-sql: true
+#  rabbitmq:
+#    host: ${RABBITMQ_HOST:localhost}
+#    port: ${RABBITMQ_PORT:5672}
+#  application:
+#    name: order-management
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+#
+#feign:
+#  client:
+#    config:
+#      default:
+#        loadBalancer:
+#          enabled: true
+#
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      productServiceCircuitBreaker:
+#        slidingWindowSize: 4
+#        failureRateThreshold: 50
+#        waitDurationInOpenState: 50s
+#        permittedNumberOfCallsInHalfOpenState: 2
+#        slidingWindowType: COUNT_BASED
+#        registerHealthIndicator: true
+#
+#logging:
+#  file:
+#    name: "${LOG_FILE_PARENT}/application.log"
+#  level:
+#    root: INFO
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+#  config: "classpath:logback-spring.xml"  # Point to custom logback configuration
