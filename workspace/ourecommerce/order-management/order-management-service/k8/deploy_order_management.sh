@@ -98,12 +98,4 @@ fi
 echo "Showing logs from pod $POD_NAME..."
 kubectl logs $POD_NAME
 
-# Show the service URL if Minikube is running
-if command -v minikube &> /dev/null && minikube status &> /dev/null; then
-    echo "Fetching service URL..."
-    minikube service order-management-service --url
-else
-    echo "Minikube is not running or installed. Make sure to forward ports manually if needed."
-fi
-
 echo "Deployment completed."

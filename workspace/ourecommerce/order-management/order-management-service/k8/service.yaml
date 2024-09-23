@@ -6,9 +6,9 @@ metadata:
 spec:
   selector:
     app: order-management
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8081          # The port the service will expose
       targetPort: 8081    # The container's port inside the Pod
-      nodePort: 30081     # NodePort between 30000 and 32767 (optional, or let Kubernetes auto-assign). In this case, the request comes in via http:<NODE_IP>:30081
-  type: NodePort
+#      nodePort: 30081     # NodePort between 30000 and 32767 (optional, or let Kubernetes auto-assign). In this case, the request comes in via http:<NODE_IP>:30081
