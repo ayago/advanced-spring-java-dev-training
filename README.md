@@ -11,3 +11,4 @@
 - [Lesson 9: Spring Security](./Session%209%20-%20Spring%20Security/)
 - [Lesson 10: Monitoring and Logging](./Session%2010%20-%20Monitoring%20and%20Logging/)
 - [Lesson 11: Docker and Kubernetes](./Session%2011%20-%20Docker%20and%20Kubernetes/)
+- [Lesson 12: Continuous Integration and Delivery](./Session%2012%20-%20Continuous%20Integration%20and%20Delivery/)
