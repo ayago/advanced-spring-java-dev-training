@@ -5,10 +5,10 @@ metadata:
   namespace: default
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /Users/adriancyago/Projects/advanced-spring-java-dev-training/logs/order-management
+    path: "/Users/adriancyago/Projects/advanced-spring-java-dev-training/logs/order-management"
   storageClassName: standard
   persistentVolumeReclaimPolicy: Retain

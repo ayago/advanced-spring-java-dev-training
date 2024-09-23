@@ -8,6 +8,7 @@ PV_FILE="persistentvolume.yaml"
 PVC_FILE="persistentvolumeclaim.yaml"
 CONFIGMAP_FILE="configmap.yaml"
 DEPLOYMENT_FILE="deployment.yaml"
+SERVICE_FILE="service.yaml"
 
 # Dockerfile location and image name
 DOCKERFILE_DIR="../"  # Adjust if the Dockerfile is in a different location
@@ -32,7 +33,7 @@ fi
 
 # Build Docker image within minikube docker
 echo "Building Docker image..."
-docker build -t $IMAGE_NAME $DOCKERFILE_DIR
+docker build --no-cache -t $IMAGE_NAME $DOCKERFILE_DIR
 if [ $? -ne 0 ]; then
     echo "Failed to build Docker image. Exiting."
     exit 1
@@ -85,6 +86,14 @@ if [ -z "$POD_NAME" ]; then
     exit 1
 fi
 
+# Apply the Service
+echo "Applying Service..."
+kubectl apply -f $SERVICE_FILE --namespace=$NAMESPACE
+if [ $? -ne 0 ]; then
+    echo "Failed to apply Service. Exiting."
+    exit 1
+fi
+
 # Show the logs from the pod
 echo "Showing logs from pod $POD_NAME..."
 kubectl logs $POD_NAME
@@ -92,7 +101,7 @@ kubectl logs $POD_NAME
 # Show the service URL if Minikube is running
 if command -v minikube &> /dev/null && minikube status &> /dev/null; then
     echo "Fetching service URL..."
-    minikube service order-management-deployment --url
+    minikube service order-management-service --url
 else
     echo "Minikube is not running or installed. Make sure to forward ports manually if needed."
 fi
