@@ -4,14 +4,17 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: guest
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:guest}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
   application:
     name: order-management
 
@@ -39,6 +42,10 @@ resilience4j:
         registerHealthIndicator: true
 
 logging:
+  file:
+    name: "${LOG_FILE_PARENT}/application.log"
   level:
-    com.netflix.discovery: DEBUG
-    com.netflix.eureka: DEBUG
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  config: "classpath:logback-spring.xml"  # Point to custom logback configuration
