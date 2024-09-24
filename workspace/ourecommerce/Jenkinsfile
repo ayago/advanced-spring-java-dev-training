@@ -1,0 +1,98 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.8.1'  // Specify your Maven version
+    }
+
+    environment {
+        CHANGED_MODULES = ''
+        MINIKUBE_IP = sh(script: "minikube ip", returnStdout: true).trim()
+        REPORT_FILE = 'failure_report.txt'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the repository
+                git branch: 'main', url: 'https://github.com/user/mono-repo.git'
+
+                script {
+                    // Detect changes between the current commit and the previous commit
+                    CHANGED_MODULES = sh(script: "git diff --name-only HEAD~1 HEAD | grep '^[^/]*'", returnStdout: true).trim()
+                    if (!CHANGED_MODULES) {
+                        echo 'No changes detected in any modules.'
+                        currentBuild.result = 'SUCCESS'
+                        return
+                    }
+                }
+            }
+        }
+
+        stage('Build Changed Modules') {
+            steps {
+                script {
+                    // List the changed modules (subdirectories)
+                    def modules = CHANGED_MODULES.tokenize('\n').join(',')
+                    echo "Building the following modules: ${modules}"
+
+                    // Run Maven, only building the changed modules and their dependencies
+                    try {
+                        sh "mvn clean install -pl ${modules} -am"
+                    } catch (Exception e) {
+                        // Handle Maven build failure
+                        echo 'Maven build failed! Rolling back and generating failure report.'
+                        writeFile file: REPORT_FILE, text: "Build failed for modules: ${modules}\nError: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+                        error 'Stopping the pipeline due to Maven build failure.'
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    def modules = CHANGED_MODULES.tokenize('\n')
+                    for (module in modules) {
+                        echo "Building Docker image for module: ${module}"
+                        // Build the Docker image
+                        sh """
+                        cd ${module}
+                        eval \$(minikube docker-env)  // Set Docker environment to Minikube
+                        docker build --no-cache -t ${module}:latest .
+                        cd ..
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    def modules = CHANGED_MODULES.tokenize('\n')
+                    for (module in modules) {
+                        echo "Deploying ${module} to Kubernetes"
+                        // Apply the Kubernetes deployment YAML file
+                        sh """
+                        kubectl apply -f ${module}/k8/deployment.yaml
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive build artifacts and reports
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            archiveArtifacts artifacts: "${REPORT_FILE}", fingerprint: true
+            echo 'Build and deployment process completed!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the failure report for details.'
+        }
+    }
+}
