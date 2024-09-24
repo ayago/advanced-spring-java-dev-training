@@ -14,8 +14,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the repository
-                git branch: 'main', url: 'https://github.com/user/mono-repo.git'
+                // Checkout the code from the repository using the SCM configuration set in Jenkins
+                checkout scm
 
                 script {
                     // Detect changes between the current commit and the previous commit
@@ -55,14 +55,28 @@ pipeline {
                 script {
                     def modules = CHANGED_MODULES.tokenize('\n')
                     for (module in modules) {
-                        echo "Building Docker image for module: ${module}"
-                        // Build the Docker image
-                        sh """
-                        cd ${module}
-                        eval \$(minikube docker-env)  // Set Docker environment to Minikube
-                        docker build --no-cache -t ${module}:latest .
-                        cd ..
-                        """
+                        // Check if the module has a Dockerfile and k8/deployment.yaml
+                        def dockerfileExists = sh(script: "test -f ${module}/Dockerfile && echo true || echo false", returnStdout: true).trim()
+                        def deploymentExists = sh(script: "test -f ${module}/k8/deployment.yaml && echo true || echo false", returnStdout: true).trim()
+
+                        if (dockerfileExists == 'true' && deploymentExists == 'true') {
+                            echo "Building Docker image for module: ${module}"
+
+                            // Build the Docker image targeting the local Nexus repository
+                            sh """
+                            cd ${module}
+                            docker build --no-cache -t host.docker.internal:5000/${module}:latest .
+                            cd ..
+                            """
+
+                            // Push the Docker image to the local Nexus repository
+                            echo "Pushing Docker image for module: ${module} to Nexus"
+                            sh """
+                            docker push host.docker.internal:5000/${module}:latest
+                            """
+                        } else {
+                            echo "Skipping Docker build for module ${module}. Dockerfile or deployment.yaml not found."
+                        }
                     }
                 }
             }
@@ -73,11 +87,18 @@ pipeline {
                 script {
                     def modules = CHANGED_MODULES.tokenize('\n')
                     for (module in modules) {
-                        echo "Deploying ${module} to Kubernetes"
-                        // Apply the Kubernetes deployment YAML file
-                        sh """
-                        kubectl apply -f ${module}/k8/deployment.yaml
-                        """
+                        // Check if the module has a k8/deployment.yaml before deploying
+                        def deploymentExists = sh(script: "test -f ${module}/k8/deployment.yaml && echo true || echo false", returnStdout: true).trim()
+
+                        if (deploymentExists == 'true') {
+                            echo "Deploying ${module} to Kubernetes"
+                            // Apply the Kubernetes deployment YAML file
+                            sh """
+                            kubectl apply -f ${module}/k8/deployment.yaml
+                            """
+                        } else {
+                            echo "Skipping deployment for module ${module}. Deployment YAML not found."
+                        }
                     }
                 }
             }
